@@ -12,71 +12,48 @@ import {
   Cell,
 } from "recharts";
 
-function calcSampleSize(
-  baselineRate: number,
-  mde: number,
-  alpha: number,
-  power: number
-): number {
-  // Two-tailed z-scores
+function calcSampleSize(baselineRate: number, mde: number, alpha: number, power: number): number {
   const zAlpha = alpha === 0.05 ? 1.96 : alpha === 0.01 ? 2.576 : 1.645;
   const zBeta = power === 0.8 ? 0.842 : power === 0.9 ? 1.282 : 0.674;
   const p1 = baselineRate;
   const p2 = baselineRate * (1 + mde / 100);
   const pBar = (p1 + p2) / 2;
-  const n =
-    Math.ceil(
-      (Math.pow(zAlpha * Math.sqrt(2 * pBar * (1 - pBar)) + zBeta * Math.sqrt(p1 * (1 - p1) + p2 * (1 - p2)), 2)) /
-        Math.pow(p2 - p1, 2)
-    );
-  return n;
+  return Math.ceil(
+    Math.pow(
+      zAlpha * Math.sqrt(2 * pBar * (1 - pBar)) +
+        zBeta * Math.sqrt(p1 * (1 - p1) + p2 * (1 - p2)),
+      2
+    ) / Math.pow(p2 - p1, 2)
+  );
 }
 
-function calcDays(samplePerVariant: number, dailyImpressions: number): number {
-  return Math.ceil((samplePerVariant * 2) / dailyImpressions);
+function calcDays(n: number, dailyImpressions: number): number {
+  return Math.ceil((n * 2) / dailyImpressions);
 }
 
-// ── Shared sub-components ────────────────────────────────────
-function PanelCard({ title, children }: { title: string; children: React.ReactNode }) {
+function Label({ children }: { children: React.ReactNode }) {
+  return (
+    <p className="text-sm mb-2" style={{ color: "var(--text-2)" }}>
+      {children}
+    </p>
+  );
+}
+
+function Card({ children }: { children: React.ReactNode }) {
   return (
     <div
       className="rounded-xl p-5"
-      style={{
-        background: "var(--bg-surface)",
-        border: "1px solid var(--border-subtle)",
-      }}
+      style={{ background: "var(--surface)", border: "1px solid var(--border)" }}
     >
-      <h3
-        className="text-xs font-bold uppercase tracking-widest mb-4 flex items-center gap-2"
-        style={{ color: "var(--text-muted)" }}
-      >
-        <span
-          className="inline-block w-1 h-4 rounded-full"
-          style={{ background: "var(--accent-purple)" }}
-          aria-hidden="true"
-        />
-        {title}
-      </h3>
       {children}
     </div>
   );
 }
 
-function FieldLabel({ children }: { children: React.ReactNode }) {
-  return (
-    <label
-      className="text-xs font-semibold uppercase tracking-widest block mb-2"
-      style={{ color: "var(--text-muted)" }}
-    >
-      {children}
-    </label>
-  );
-}
-
-const inputStyle: React.CSSProperties = {
-  background: "var(--bg-input)",
-  border: "1px solid var(--border-default)",
-  color: "var(--text-primary)",
+const fieldStyle: React.CSSProperties = {
+  background: "var(--surface-2)",
+  border: "1px solid var(--border)",
+  color: "var(--text)",
   borderRadius: "8px",
   padding: "8px 12px",
   fontSize: "0.875rem",
@@ -84,18 +61,14 @@ const inputStyle: React.CSSProperties = {
   outline: "none",
 };
 
-const selectStyle: React.CSSProperties = {
-  ...inputStyle,
-  cursor: "pointer",
-};
-
-function SliderWithValue({
+function SliderField({
   label,
   value,
   min,
   max,
   step,
   display,
+  note,
   onChange,
 }: {
   label: string;
@@ -104,19 +77,14 @@ function SliderWithValue({
   max: number;
   step: number;
   display: string;
+  note?: string;
   onChange: (v: number) => void;
 }) {
   return (
     <div>
       <div className="flex justify-between items-baseline mb-2">
-        <FieldLabel>{label}</FieldLabel>
-        <span
-          className="text-sm font-bold tabular-nums px-2 py-0.5 rounded-md"
-          style={{
-            color: "var(--accent-purple-light)",
-            background: "rgba(124,58,237,0.12)",
-          }}
-        >
+        <Label>{label}</Label>
+        <span className="text-sm font-medium tabular-nums" style={{ color: "var(--text)" }}>
           {display}
         </span>
       </div>
@@ -127,15 +95,17 @@ function SliderWithValue({
         step={step}
         value={value}
         onChange={(e) => onChange(Number(e.target.value))}
-        className="w-full appearance-none cursor-pointer"
-        style={{ accentColor: "var(--accent-purple)" }}
         aria-label={label}
       />
+      {note && (
+        <p className="text-xs mt-1" style={{ color: "var(--text-3)" }}>
+          {note}
+        </p>
+      )}
     </div>
   );
 }
 
-// ── Main ─────────────────────────────────────────────────────
 export default function ABTestDesigner() {
   const [config, setConfig] = useState({
     controlFormat: "Standard 30s",
@@ -160,88 +130,92 @@ export default function ABTestDesigner() {
         : config.baselineCompletion / 100;
     const n = calcSampleSize(baseline, config.mde, config.alpha, config.power);
     const days = calcDays(n, config.dailyImpressions * (config.trafficSplit / 100));
-    const totalImpressions = n * 2;
-    const projectedLift = baseline * (1 + config.mde / 100);
-
-    return { n, days, totalImpressions, projectedLift };
+    return { n, days, totalImpressions: n * 2 };
   }, [config]);
 
   const metricLabel = config.primaryMetric === "ctr" ? "CTR" : "Completion Rate";
-  const baselineVal =
-    config.primaryMetric === "ctr"
-      ? config.baselineCTR
-      : config.baselineCompletion;
+  const baselineVal = config.primaryMetric === "ctr" ? config.baselineCTR : config.baselineCompletion;
+  const treatmentVal = +(baselineVal * (1 + config.mde / 100)).toFixed(2);
 
   const barData = [
-    { name: "Control", value: baselineVal, color: "#2D1B56" },
-    { name: "Treatment", value: +(baselineVal * (1 + config.mde / 100)).toFixed(2), color: "#7C3AED" },
+    { name: "Control", value: baselineVal, color: "#3f3f46" },
+    { name: "Treatment", value: treatmentVal, color: "#8b5cf6" },
   ];
+
+  const focusStyle = (e: React.FocusEvent<HTMLSelectElement | HTMLInputElement>) => {
+    e.currentTarget.style.borderColor = "var(--accent)";
+  };
+  const blurStyle = (e: React.FocusEvent<HTMLSelectElement | HTMLInputElement>) => {
+    e.currentTarget.style.borderColor = "var(--border)";
+  };
 
   return (
     <div className="space-y-6">
+
       {/* Header */}
       <div>
-        <h2
-          className="text-xl font-extrabold tracking-tight"
-          style={{ color: "var(--text-primary)" }}
-        >
+        <h2 className="text-lg font-semibold mb-1.5" style={{ color: "var(--text)" }}>
           A/B Test Designer
         </h2>
-        <p className="text-sm mt-1 leading-relaxed" style={{ color: "var(--text-secondary)" }}>
+        <p className="text-sm leading-relaxed" style={{ color: "var(--text-2)", maxWidth: "60ch" }}>
           Configure experiment parameters for a statistically valid CTV format test.
-          Sample size calculations use the two-tailed z-test formula standard in
-          industry experimentation.
+          Sample size uses the two-tailed z-test formula standard in industry experimentation.
         </p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Config panel */}
-        <div className="space-y-5">
-          <PanelCard title="Variants">
+
+        {/* Left: config */}
+        <div className="space-y-4">
+          <Card>
+            <p className="text-sm font-medium mb-4" style={{ color: "var(--text)" }}>Variants</p>
             <div className="space-y-4">
               <div>
-                <FieldLabel>Control Format</FieldLabel>
+                <Label>Control format</Label>
                 <input
                   type="text"
                   value={config.controlFormat}
                   onChange={(e) => set("controlFormat")(e.target.value)}
-                  style={inputStyle}
-                  onFocus={(e) => (e.currentTarget.style.borderColor = "var(--accent-purple)")}
-                  onBlur={(e) => (e.currentTarget.style.borderColor = "var(--border-default)")}
+                  style={fieldStyle}
+                  onFocus={focusStyle}
+                  onBlur={blurStyle}
                 />
               </div>
               <div>
-                <FieldLabel>Treatment Format</FieldLabel>
+                <Label>Treatment format</Label>
                 <input
                   type="text"
                   value={config.treatmentFormat}
                   onChange={(e) => set("treatmentFormat")(e.target.value)}
-                  style={inputStyle}
-                  onFocus={(e) => (e.currentTarget.style.borderColor = "var(--accent-purple)")}
-                  onBlur={(e) => (e.currentTarget.style.borderColor = "var(--border-default)")}
+                  style={fieldStyle}
+                  onFocus={focusStyle}
+                  onBlur={blurStyle}
                 />
               </div>
             </div>
-          </PanelCard>
+          </Card>
 
-          <PanelCard title="Experiment Parameters">
+          <Card>
+            <p className="text-sm font-medium mb-4" style={{ color: "var(--text)" }}>
+              Experiment parameters
+            </p>
             <div className="space-y-5">
               <div>
-                <FieldLabel>Primary Metric</FieldLabel>
+                <Label>Primary metric</Label>
                 <select
                   value={config.primaryMetric}
                   onChange={(e) => set("primaryMetric")(e.target.value)}
-                  style={selectStyle}
-                  onFocus={(e) => (e.currentTarget.style.borderColor = "var(--accent-purple)")}
-                  onBlur={(e) => (e.currentTarget.style.borderColor = "var(--border-default)")}
+                  style={{ ...fieldStyle, cursor: "pointer" }}
+                  onFocus={focusStyle}
+                  onBlur={blurStyle}
                 >
                   <option value="ctr">Click-Through Rate (CTR)</option>
                   <option value="completion">Completion Rate</option>
                 </select>
               </div>
 
-              <SliderWithValue
-                label={`Baseline ${config.primaryMetric === "ctr" ? "CTR (%)" : "Completion (%)"}`}
+              <SliderField
+                label={`Baseline ${config.primaryMetric === "ctr" ? "CTR (%)" : "completion (%)"}`}
                 value={baselineVal}
                 min={config.primaryMetric === "ctr" ? 0.1 : 40}
                 max={config.primaryMetric === "ctr" ? 5 : 99}
@@ -252,30 +226,26 @@ export default function ABTestDesigner() {
                 }
               />
 
-              <div>
-                <SliderWithValue
-                  label="Minimum Detectable Effect (MDE)"
-                  value={config.mde}
-                  min={5}
-                  max={50}
-                  step={5}
-                  display={`+${config.mde}%`}
-                  onChange={(v) => set("mde")(v)}
-                />
-                <p className="text-xs mt-1" style={{ color: "var(--text-muted)" }}>
-                  Smallest lift worth detecting
-                </p>
-              </div>
+              <SliderField
+                label="Minimum detectable effect (MDE)"
+                value={config.mde}
+                min={5}
+                max={50}
+                step={5}
+                display={`+${config.mde}%`}
+                note="Smallest lift worth detecting"
+                onChange={(v) => set("mde")(v)}
+              />
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <FieldLabel>Significance (α)</FieldLabel>
+                  <Label>Significance (α)</Label>
                   <select
                     value={config.alpha}
                     onChange={(e) => set("alpha")(Number(e.target.value))}
-                    style={selectStyle}
-                    onFocus={(e) => (e.currentTarget.style.borderColor = "var(--accent-purple)")}
-                    onBlur={(e) => (e.currentTarget.style.borderColor = "var(--border-default)")}
+                    style={{ ...fieldStyle, cursor: "pointer" }}
+                    onFocus={focusStyle}
+                    onBlur={blurStyle}
                   >
                     <option value={0.10}>90% (α=0.10)</option>
                     <option value={0.05}>95% (α=0.05)</option>
@@ -283,13 +253,13 @@ export default function ABTestDesigner() {
                   </select>
                 </div>
                 <div>
-                  <FieldLabel>Statistical Power</FieldLabel>
+                  <Label>Statistical power</Label>
                   <select
                     value={config.power}
                     onChange={(e) => set("power")(Number(e.target.value))}
-                    style={selectStyle}
-                    onFocus={(e) => (e.currentTarget.style.borderColor = "var(--accent-purple)")}
-                    onBlur={(e) => (e.currentTarget.style.borderColor = "var(--border-default)")}
+                    style={{ ...fieldStyle, cursor: "pointer" }}
+                    onFocus={focusStyle}
+                    onBlur={blurStyle}
                   >
                     <option value={0.70}>70%</option>
                     <option value={0.80}>80% (standard)</option>
@@ -298,8 +268,8 @@ export default function ABTestDesigner() {
                 </div>
               </div>
 
-              <SliderWithValue
-                label="Daily Impressions (total)"
+              <SliderField
+                label="Daily impressions (total)"
                 value={config.dailyImpressions}
                 min={5000}
                 max={500000}
@@ -308,8 +278,8 @@ export default function ABTestDesigner() {
                 onChange={(v) => set("dailyImpressions")(v)}
               />
 
-              <SliderWithValue
-                label="Traffic Split (% to experiment)"
+              <SliderField
+                label="Traffic allocated to experiment"
                 value={config.trafficSplit}
                 min={10}
                 max={100}
@@ -318,127 +288,96 @@ export default function ABTestDesigner() {
                 onChange={(v) => set("trafficSplit")(v)}
               />
             </div>
-          </PanelCard>
+          </Card>
         </div>
 
-        {/* Results panel */}
+        {/* Right: results */}
         <div className="space-y-4">
+
+          {/* Output stats */}
           <div className="grid grid-cols-2 gap-4">
-            {/* Sample / variant */}
-            <div
-              className="rounded-xl p-4"
-              style={{
-                background: "var(--bg-surface)",
-                border: "1px solid var(--border-subtle)",
-              }}
-            >
-              <p className="text-xs font-bold uppercase tracking-widest mb-1" style={{ color: "var(--text-muted)" }}>
-                Sample / Variant
-              </p>
+            <Card>
+              <p className="text-xs mb-2" style={{ color: "var(--text-3)" }}>Sample / variant</p>
               <p
-                className="font-extrabold tabular-nums leading-none"
-                style={{ fontSize: "2rem", color: "var(--text-primary)", letterSpacing: "-0.02em" }}
+                className="font-bold tabular-nums leading-none mb-1"
+                style={{ fontSize: "1.875rem", color: "var(--text)", letterSpacing: "-0.025em" }}
               >
                 {results.n.toLocaleString()}
               </p>
-              <p className="text-xs mt-1" style={{ color: "var(--text-muted)" }}>
-                impressions needed
-              </p>
-            </div>
-
-            {/* Total impressions */}
-            <div
-              className="rounded-xl p-4"
-              style={{
-                background: "var(--bg-surface)",
-                border: "1px solid var(--border-subtle)",
-              }}
-            >
-              <p className="text-xs font-bold uppercase tracking-widest mb-1" style={{ color: "var(--text-muted)" }}>
-                Total Impressions
-              </p>
+              <p className="text-xs" style={{ color: "var(--text-3)" }}>impressions needed</p>
+            </Card>
+            <Card>
+              <p className="text-xs mb-2" style={{ color: "var(--text-3)" }}>Total impressions</p>
               <p
-                className="font-extrabold tabular-nums leading-none"
-                style={{ fontSize: "2rem", color: "var(--text-primary)", letterSpacing: "-0.02em" }}
+                className="font-bold tabular-nums leading-none mb-1"
+                style={{ fontSize: "1.875rem", color: "var(--text)", letterSpacing: "-0.025em" }}
               >
                 {results.totalImpressions.toLocaleString()}
               </p>
-              <p className="text-xs mt-1" style={{ color: "var(--text-muted)" }}>
-                both variants combined
-              </p>
-            </div>
-
-            {/* Test duration — hero stat */}
-            <div
-              className="col-span-2 rounded-xl p-5"
-              style={{
-                background: "rgba(124,58,237,0.10)",
-                border: "1px solid rgba(124,58,237,0.35)",
-                boxShadow: "0 0 0 1px rgba(124,58,237,0.10), 0 4px 24px rgba(109,40,217,0.12)",
-              }}
-            >
-              <p className="text-xs font-bold uppercase tracking-widest mb-1" style={{ color: "#A855F7" }}>
-                Projected Test Duration
-              </p>
-              <p
-                className="font-extrabold tabular-nums leading-none"
-                style={{ fontSize: "3rem", color: "var(--text-primary)", letterSpacing: "-0.03em" }}
-              >
-                {results.days}{" "}
-                <span
-                  className="text-xl font-normal"
-                  style={{ color: "var(--text-secondary)" }}
-                >
-                  days
-                </span>
-              </p>
-              <p className="text-xs mt-2" style={{ color: "var(--text-muted)" }}>
-                at {config.dailyImpressions.toLocaleString()} impressions/day ·{" "}
-                {config.trafficSplit}% traffic allocated
-              </p>
-            </div>
+              <p className="text-xs" style={{ color: "var(--text-3)" }}>both variants</p>
+            </Card>
           </div>
 
-          {/* Bar chart */}
+          {/* Duration — hero */}
           <div
             className="rounded-xl p-5"
             style={{
-              background: "var(--bg-surface)",
-              border: "1px solid var(--border-subtle)",
+              background: "var(--accent-dim)",
+              border: "1px solid rgba(139,92,246,0.2)",
             }}
           >
-            <h3
-              className="text-xs font-bold uppercase tracking-widest mb-4"
-              style={{ color: "var(--text-muted)" }}
-            >
-              Control vs. Treatment — Projected {metricLabel}
-            </h3>
-            <ResponsiveContainer width="100%" height={160}>
-              <BarChart data={barData} margin={{ top: 5, right: 10, left: -20, bottom: 5 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(109,40,217,0.10)" vertical={false} />
+            <p className="text-xs mb-2" style={{ color: "var(--accent)" }}>
+              Projected test duration
+            </p>
+            <div className="flex items-baseline gap-2">
+              <span
+                className="font-bold tabular-nums"
+                style={{ fontSize: "3rem", color: "var(--text)", letterSpacing: "-0.03em", lineHeight: 1 }}
+              >
+                {results.days}
+              </span>
+              <span className="text-xl" style={{ color: "var(--text-2)" }}>days</span>
+            </div>
+            <p className="text-xs mt-2" style={{ color: "var(--text-3)" }}>
+              at {config.dailyImpressions.toLocaleString()} impressions/day · {config.trafficSplit}% traffic allocated
+            </p>
+          </div>
+
+          {/* Bar chart */}
+          <Card>
+            <p className="text-sm font-medium mb-4" style={{ color: "var(--text)" }}>
+              Control vs. treatment — projected {metricLabel}
+            </p>
+            <ResponsiveContainer width="100%" height={150}>
+              <BarChart data={barData} margin={{ top: 5, right: 5, left: -22, bottom: 0 }}>
+                <CartesianGrid
+                  strokeDasharray="3 3"
+                  stroke="rgba(255,255,255,0.04)"
+                  vertical={false}
+                />
                 <XAxis
                   dataKey="name"
-                  tick={{ fill: "#9B8EC4", fontSize: 12, fontWeight: 600 }}
+                  tick={{ fill: "#71717a", fontSize: 12 }}
                   tickLine={false}
-                  axisLine={{ stroke: "#1E1340" }}
+                  axisLine={false}
                 />
                 <YAxis
-                  domain={[0, (dataMax: number) => Math.ceil(dataMax * 1.3 * 10) / 10]}
-                  tick={{ fill: "#5B4F7A", fontSize: 11 }}
+                  domain={[0, (dataMax: number) => Math.ceil(dataMax * 1.4 * 10) / 10]}
+                  tick={{ fill: "#52525b", fontSize: 11 }}
                   tickLine={false}
-                  axisLine={{ stroke: "#1E1340" }}
+                  axisLine={false}
                   tickFormatter={(v) => `${v}%`}
                 />
                 <Tooltip
                   formatter={(v) => [`${v}%`, metricLabel]}
                   contentStyle={{
-                    backgroundColor: "#160d2a",
-                    border: "1px solid rgba(124,58,237,0.30)",
+                    background: "var(--surface-2)",
+                    border: "1px solid var(--border-2)",
                     borderRadius: "8px",
                     fontSize: "12px",
-                    color: "#F1EEF9",
+                    color: "var(--text)",
                   }}
-                  labelStyle={{ color: "#9B8EC4", fontWeight: 700 }}
+                  labelStyle={{ color: "var(--text-2)" }}
                 />
                 <Bar dataKey="value" radius={[4, 4, 0, 0]}>
                   {barData.map((entry, i) => (
@@ -449,35 +388,28 @@ export default function ABTestDesigner() {
             </ResponsiveContainer>
             <div
               className="mt-3 pt-3 grid grid-cols-2 gap-4 text-xs"
-              style={{ borderTop: "1px solid var(--border-subtle)" }}
+              style={{ borderTop: "1px solid var(--border)" }}
             >
               <div>
-                <p style={{ color: "var(--text-muted)" }}>Control ({config.controlFormat})</p>
-                <p className="font-semibold mt-0.5" style={{ color: "var(--text-primary)" }}>{baselineVal}%</p>
+                <p style={{ color: "var(--text-3)" }}>{config.controlFormat}</p>
+                <p className="font-semibold mt-0.5 tabular-nums" style={{ color: "var(--text)" }}>
+                  {baselineVal}%
+                </p>
               </div>
               <div>
-                <p style={{ color: "var(--text-muted)" }}>Treatment ({config.treatmentFormat})</p>
-                <p className="font-semibold mt-0.5" style={{ color: "#A855F7" }}>
-                  {(baselineVal * (1 + config.mde / 100)).toFixed(2)}%
+                <p style={{ color: "var(--text-3)" }}>{config.treatmentFormat}</p>
+                <p className="font-semibold mt-0.5 tabular-nums" style={{ color: "var(--accent)" }}>
+                  {treatmentVal}%
                 </p>
               </div>
             </div>
-          </div>
+          </Card>
 
-          {/* Experiment summary */}
-          <div
-            className="rounded-xl p-5"
-            style={{
-              background: "var(--bg-surface)",
-              border: "1px solid var(--border-subtle)",
-            }}
-          >
-            <h3
-              className="text-xs font-bold uppercase tracking-widest mb-4"
-              style={{ color: "var(--text-muted)" }}
-            >
-              Experiment Design Summary
-            </h3>
+          {/* Experiment design summary */}
+          <Card>
+            <p className="text-sm font-medium mb-4" style={{ color: "var(--text)" }}>
+              Experiment design summary
+            </p>
             <div className="space-y-2.5 text-sm">
               {[
                 ["Hypothesis", `${config.treatmentFormat} will improve ${metricLabel} by ≥${config.mde}% vs. ${config.controlFormat}`],
@@ -489,16 +421,16 @@ export default function ABTestDesigner() {
               ].map(([key, val]) => (
                 <div key={key} className="flex gap-3">
                   <span
-                    className="text-xs font-bold uppercase tracking-widest shrink-0 pt-0.5"
-                    style={{ color: "var(--accent-purple-light)", minWidth: "130px" }}
+                    className="shrink-0 font-medium"
+                    style={{ color: "var(--text)", minWidth: "140px", fontSize: "0.8125rem" }}
                   >
                     {key}
                   </span>
-                  <span style={{ color: "var(--text-secondary)" }}>{val}</span>
+                  <span style={{ color: "var(--text-2)", fontSize: "0.8125rem" }}>{val}</span>
                 </div>
               ))}
             </div>
-          </div>
+          </Card>
         </div>
       </div>
     </div>
