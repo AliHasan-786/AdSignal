@@ -63,9 +63,9 @@ const TABS = [
   },
   {
     id: "simulator",
-    label: "Simulate",
+    label: "Prototype",
     step: "03",
-    description: "Live prototype — engagement decay, CTR, fatigue score",
+    description: "Interactive TV demo + performance projections",
   },
   {
     id: "research",
@@ -207,9 +207,25 @@ export default function Home() {
 
           <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-6">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: "var(--accent)" }}>
-                APM Portfolio · Ad Experiences
-              </p>
+              <div className="flex items-center gap-2 mb-2">
+                <p className="text-xs font-semibold uppercase tracking-widest" style={{ color: "var(--accent)" }}>
+                  APM Portfolio · Ad Experiences
+                </p>
+                <span
+                  className="text-xs px-2 py-0.5 rounded-md font-medium flex items-center gap-1"
+                  style={{
+                    background: "rgba(124,106,245,0.10)",
+                    border: "1px solid rgba(124,106,245,0.25)",
+                    color: "var(--accent)",
+                  }}
+                >
+                  <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true">
+                    <circle cx="5" cy="5" r="4" stroke="currentColor" strokeWidth="1.2" />
+                    <path d="M3 5l1.5 1.5L7 3.5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                  Built with Claude Code
+                </span>
+              </div>
               <h1
                 className="font-extrabold leading-tight mb-2"
                 style={{ fontSize: "1.875rem", letterSpacing: "-0.035em", color: "var(--text)" }}
@@ -339,7 +355,17 @@ export default function Home() {
             {" "}· Next.js · Recharts · Claude API · Vercel
           </p>
           <p className="text-xs" style={{ color: "var(--text-3)" }}>
-            IAB CTV Benchmarks 2024 · Deloitte Digital Media Trends 2025
+            Built with{" "}
+            <a
+              href="https://claude.ai/code"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline underline-offset-2"
+              style={{ color: "var(--text-2)" }}
+            >
+              Claude Code
+            </a>
+            {" "}· Multi-agent workflow · AI-native development
           </p>
         </div>
       </footer>

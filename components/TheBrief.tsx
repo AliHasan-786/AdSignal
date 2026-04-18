@@ -404,7 +404,23 @@ export default function TheBrief() {
 
       {/* Section 4: Success Metrics */}
       <section>
-        <SectionTitle>Success Metrics</SectionTitle>
+        <div className="flex items-center gap-2 mb-5">
+          <SectionTitle>Success Metrics</SectionTitle>
+          <span
+            style={{
+              display: "inline-block",
+              fontSize: "0.65rem",
+              padding: "1px 6px",
+              borderRadius: "4px",
+              background: "rgba(251,191,36,0.10)",
+              color: "var(--amber)",
+              border: "1px solid rgba(251,191,36,0.25)",
+              fontWeight: 600,
+            }}
+          >
+            Projected targets — not Roku internal data
+          </span>
+        </div>
         <p className="text-xs font-semibold uppercase tracking-wide mb-3" style={{ color: "var(--text-3)" }}>
           Primary KPIs
         </p>

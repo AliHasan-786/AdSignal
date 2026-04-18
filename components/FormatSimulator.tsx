@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import EngagementCurve from "./EngagementCurve";
 import FatigueScore from "./FatigueScore";
+import TVPrototype from "./TVPrototype";
 import {
   predict,
   getFormatOptions,
@@ -177,7 +178,34 @@ export default function FormatSimulator() {
   const selectedFormat = formatOptions.find((f) => f.value === inputs.format);
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-[260px_1fr] gap-6">
+    <div className="space-y-10">
+
+      {/* ── PROTOTYPE ── */}
+      <div
+        className="rounded-xl p-6"
+        style={{ background: "var(--surface)", border: "1px solid var(--border)" }}
+      >
+        <TVPrototype />
+      </div>
+
+      {/* ── PERFORMANCE PROJECTIONS ── */}
+      <div>
+        <div className="flex items-center gap-3 mb-5">
+          <p className="text-base font-semibold" style={{ color: "var(--text)" }}>
+            Performance projections
+          </p>
+          <span
+            className="text-xs px-2 py-0.5 rounded font-medium"
+            style={{ background: "rgba(251,191,36,0.10)", color: "var(--amber)", border: "1px solid rgba(251,191,36,0.2)" }}
+          >
+            Modeled data
+          </span>
+          <span className="text-xs" style={{ color: "var(--text-3)" }}>
+            Estimates derived from IAB CTV Benchmarks 2024 — not Roku internal data
+          </span>
+        </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-[260px_1fr] gap-6">
 
       {/* ── LEFT: Controls ── */}
       <aside className="space-y-4">
@@ -372,7 +400,9 @@ export default function FormatSimulator() {
           color={output.fatigueColor}
           description={output.fatigueDescription}
         />
-      </div>
+      </div>{/* end right column */}
+      </div>{/* end grid */}
+      </div>{/* end performance projections */}
     </div>
   );
 }

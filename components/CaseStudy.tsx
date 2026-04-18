@@ -1,5 +1,33 @@
 "use client";
 
+function DataBadge({ type }: { type: "real" | "synthetic" | "modeled" | "representative" }) {
+  const config = {
+    real: { label: "Real source", bg: "rgba(52,211,153,0.10)", color: "var(--green)", border: "rgba(52,211,153,0.25)" },
+    synthetic: { label: "Synthetic", bg: "rgba(251,191,36,0.10)", color: "var(--amber)", border: "rgba(251,191,36,0.25)" },
+    modeled: { label: "Modeled", bg: "rgba(251,191,36,0.10)", color: "var(--amber)", border: "rgba(251,191,36,0.25)" },
+    representative: { label: "Representative quote", bg: "rgba(251,191,36,0.10)", color: "var(--amber)", border: "rgba(251,191,36,0.25)" },
+  }[type];
+  return (
+    <span
+      style={{
+        display: "inline-block",
+        fontSize: "0.65rem",
+        padding: "1px 6px",
+        borderRadius: "4px",
+        background: config.bg,
+        color: config.color,
+        border: `1px solid ${config.border}`,
+        marginLeft: "6px",
+        verticalAlign: "middle",
+        fontWeight: 600,
+        letterSpacing: "0.02em",
+      }}
+    >
+      {config.label}
+    </span>
+  );
+}
+
 function SectionTitle({ children }: { children: React.ReactNode }) {
   return (
     <h2 className="text-base font-semibold mb-5" style={{ color: "var(--text)" }}>
@@ -18,6 +46,7 @@ function StatCard({
   source,
   url,
   accent = "var(--accent)",
+  badge,
   children,
 }: {
   stat: string;
@@ -25,6 +54,7 @@ function StatCard({
   source: string;
   url: string;
   accent?: string;
+  badge?: "real" | "synthetic" | "modeled" | "representative";
   children: React.ReactNode;
 }) {
   return (
@@ -33,7 +63,7 @@ function StatCard({
       style={{ background: "var(--surface)", border: "1px solid var(--border)" }}
     >
       <div className="px-5 py-4" style={{ borderBottom: "1px solid var(--border)" }}>
-        <div className="flex items-baseline gap-2.5 mb-1">
+        <div className="flex items-baseline gap-2.5 mb-1 flex-wrap">
           <span
             className="font-bold tabular-nums leading-none"
             style={{ fontSize: "2.5rem", color: accent, letterSpacing: "-0.03em" }}
@@ -43,6 +73,7 @@ function StatCard({
           <span className="text-xs font-medium uppercase tracking-wide" style={{ color: "var(--text-3)" }}>
             {label}
           </span>
+          {badge && <DataBadge type={badge} />}
         </div>
       </div>
       <div className="px-5 py-4">
@@ -110,9 +141,10 @@ export default function CaseStudy() {
         <StatCard
           stat="$40K"
           label="wasted — no pre-campaign format prediction"
-          source="r/PPC community — representative advertiser account"
+          source="r/PPC — representative advertiser account"
           url="https://www.reddit.com/r/PPC/"
           accent="var(--red)"
+          badge="representative"
         >
           &ldquo;We spent $40K on a CTV interactive ad campaign. Completion rate was 12%. We had no idea what to expect before launch. The platform gives you historical averages but nothing specific to your format or category.&rdquo; — CTV advertiser, r/PPC
         </StatCard>
@@ -123,6 +155,7 @@ export default function CaseStudy() {
           source="Deloitte Digital Media Trends 2025"
           url="https://www2.deloitte.com/us/en/insights/industry/technology/digital-media-trends.html"
           accent="var(--amber)"
+          badge="real"
         >
           Ad fatigue is a platform-level risk for Roku, not just an advertiser problem. Over-frequency or low-quality format selection harms viewer retention — but Roku has no tool that helps advertisers make better choices before campaigns go live.
         </StatCard>
@@ -133,6 +166,7 @@ export default function CaseStudy() {
           source="Marketing Brew — CTV advertising coverage"
           url="https://www.marketingbrew.com/topics/video"
           accent="var(--text-2)"
+          badge="synthetic"
         >
           &ldquo;The risk of annoying users is real when interactivity isn&apos;t intuitive.&rdquo; Shoppable and interactive formats are Roku&apos;s highest-CPM inventory — but without a preview mechanism, advertisers can&apos;t confidently commit to premium formats.
         </StatCard>
@@ -169,9 +203,12 @@ export default function CaseStudy() {
       <Divider />
 
       {/* RICE */}
-      <SectionTitle>Feature prioritization — RICE</SectionTitle>
+      <div className="flex items-center gap-2 mb-5">
+        <SectionTitle>Feature prioritization — RICE</SectionTitle>
+        <DataBadge type="modeled" />
+      </div>
       <p className="text-sm leading-relaxed mb-5" style={{ color: "var(--text-2)" }}>
-        If Roku were to build Campaign Preview into OneView, these are the features I&apos;d prioritize for v1 and v2, scored by RICE.
+        If Roku were to build Campaign Preview into OneView, these are the features I&apos;d prioritize for v1 and v2, scored by RICE. Reach and confidence values are author estimates based on public Roku advertiser data.
       </p>
       <div
         className="rounded-xl overflow-hidden"
@@ -227,9 +264,12 @@ export default function CaseStudy() {
       <Divider />
 
       {/* Competitive teardown */}
-      <SectionTitle>Competitive teardown — interactive CTV formats</SectionTitle>
+      <div className="flex items-center gap-2 mb-5">
+        <SectionTitle>Competitive teardown — interactive CTV formats</SectionTitle>
+        <DataBadge type="modeled" />
+      </div>
       <p className="text-sm leading-relaxed mb-5" style={{ color: "var(--text-2)" }}>
-        Roku&apos;s Action Ads lead on CTR. The gap vs. Standard CTV is the core advertiser value proposition — but only if advertisers can confidently select the right format.
+        CTR and completion ranges are approximated from public sources: IAB CTV Benchmarks 2024, eMarketer, and published Roku Action Ads case studies. Not Roku internal data.
       </p>
       <div
         className="rounded-xl overflow-hidden"
