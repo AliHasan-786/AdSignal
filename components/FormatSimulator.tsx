@@ -20,11 +20,46 @@ const DEFAULT_INPUTS = {
   targetFrequency: 3,
 };
 
+// ── Sub-components ────────────────────────────────────────────
+
 function FieldLabel({ children }: { children: React.ReactNode }) {
   return (
-    <p className="text-sm mb-2" style={{ color: "var(--text-2)" }}>
+    <p className="text-xs font-medium mb-2" style={{ color: "var(--text-3)" }}>
       {children}
     </p>
+  );
+}
+
+function SelectField({
+  label,
+  value,
+  onChange,
+  children,
+}: {
+  label: string;
+  value: string;
+  onChange: (v: string) => void;
+  children: React.ReactNode;
+}) {
+  return (
+    <div>
+      <FieldLabel>{label}</FieldLabel>
+      <select
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        className="w-full text-sm rounded-lg px-3 py-2 focus:outline-none transition-colors"
+        style={{
+          background: "var(--surface-2)",
+          border: "1px solid var(--border-2)",
+          color: "var(--text)",
+          fontFamily: "inherit",
+        }}
+        onFocus={(e) => (e.currentTarget.style.borderColor = "var(--accent)")}
+        onBlur={(e) => (e.currentTarget.style.borderColor = "var(--border-2)")}
+      >
+        {children}
+      </select>
+    </div>
   );
 }
 
@@ -50,9 +85,12 @@ function SliderField({
   const display = formatValue ? formatValue(value) : `${value}${unit ?? ""}`;
   return (
     <div>
-      <div className="flex justify-between items-baseline mb-2">
+      <div className="flex justify-between items-center mb-2">
         <FieldLabel>{label}</FieldLabel>
-        <span className="text-sm font-medium tabular-nums" style={{ color: "var(--text)" }}>
+        <span
+          className="text-xs font-semibold tabular-nums"
+          style={{ color: "var(--accent)" }}
+        >
           {display}
         </span>
       </div>
@@ -68,77 +106,38 @@ function SliderField({
         aria-valuemin={min}
         aria-valuemax={max}
       />
-      <div className="flex justify-between mt-1.5 text-xs" style={{ color: "var(--text-3)" }}>
-        <span>{min}{unit}</span>
-        <span>{max}{unit}</span>
-      </div>
     </div>
   );
 }
 
-function SelectField({
+// Inline stat pill — used inside chart header
+function InlineStat({
   label,
   value,
-  onChange,
-  children,
-}: {
-  label: string;
-  value: string;
-  onChange: (v: string) => void;
-  children: React.ReactNode;
-}) {
-  return (
-    <div>
-      <FieldLabel>{label}</FieldLabel>
-      <select
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        className="w-full text-sm rounded-lg px-3 py-2.5 focus:outline-none transition-colors"
-        style={{
-          background: "var(--surface-2)",
-          border: "1px solid var(--border)",
-          color: "var(--text)",
-        }}
-        onFocus={(e) => (e.currentTarget.style.borderColor = "var(--accent)")}
-        onBlur={(e) => (e.currentTarget.style.borderColor = "var(--border)")}
-      >
-        {children}
-      </select>
-    </div>
-  );
-}
-
-function KpiCard({
-  label,
-  value,
-  subtext,
   color,
 }: {
   label: string;
   value: string;
-  subtext: string;
   color: string;
 }) {
   return (
     <div
-      className="rounded-xl p-5"
-      style={{ background: "var(--surface)", border: "1px solid var(--border)" }}
+      className="flex flex-col items-end"
     >
-      <p className="text-xs mb-3" style={{ color: "var(--text-3)" }}>
-        {label}
-      </p>
-      <p
-        className="font-bold tabular-nums leading-none mb-2"
-        style={{ fontSize: "2.25rem", color, letterSpacing: "-0.03em" }}
+      <span
+        className="font-extrabold tabular-nums leading-none"
+        style={{ fontSize: "1.5rem", color, letterSpacing: "-0.03em" }}
       >
         {value}
-      </p>
-      <p className="text-xs" style={{ color: "var(--text-3)" }}>
-        {subtext}
-      </p>
+      </span>
+      <span className="text-xs mt-0.5" style={{ color: "var(--text-3)" }}>
+        {label}
+      </span>
     </div>
   );
 }
+
+// ── Main ─────────────────────────────────────────────────────
 
 export default function FormatSimulator() {
   const [inputs, setInputs] = useState(DEFAULT_INPUTS);
@@ -165,7 +164,7 @@ export default function FormatSimulator() {
       setAI({ text: data.recommendation, loading: false, error: false });
     } catch {
       setAI({
-        text: "Unable to reach the API. Based on your inputs, review the engagement curve for drop-off risk and consider frequency capping if your fatigue score exceeds 6.",
+        text: "Unable to reach the API. Based on your inputs, review the engagement curve for drop-off risk and consider frequency capping if fatigue score exceeds 6.",
         loading: false,
         error: true,
       });
@@ -178,21 +177,33 @@ export default function FormatSimulator() {
   const selectedFormat = formatOptions.find((f) => f.value === inputs.format);
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-8">
+    <div className="grid grid-cols-1 lg:grid-cols-[260px_1fr] gap-6">
 
-      {/* Controls panel */}
-      <div className="space-y-5">
+      {/* ── LEFT: Controls ── */}
+      <aside className="space-y-4">
         <div
           className="rounded-xl p-5 space-y-5"
-          style={{ background: "var(--surface)", border: "1px solid var(--border)" }}
+          style={{
+            background: "var(--surface)",
+            border: "1px solid var(--border)",
+          }}
         >
+          <p
+            className="text-xs font-semibold uppercase tracking-widest"
+            style={{ color: "var(--text-3)" }}
+          >
+            Configuration
+          </p>
+
           <SelectField
             label="Format type"
             value={inputs.format}
             onChange={(v) => set("format")(v as FormatKey)}
           >
             {formatOptions.map((opt) => (
-              <option key={opt.value} value={opt.value}>{opt.label}</option>
+              <option key={opt.value} value={opt.value}>
+                {opt.label}
+              </option>
             ))}
           </SelectField>
 
@@ -202,9 +213,13 @@ export default function FormatSimulator() {
             onChange={(v) => set("category")(v as CategoryKey)}
           >
             {categoryOptions.map((opt) => (
-              <option key={opt.value} value={opt.value}>{opt.label}</option>
+              <option key={opt.value} value={opt.value}>
+                {opt.label}
+              </option>
             ))}
           </SelectField>
+
+          <div className="pt-1" style={{ borderTop: "1px solid var(--border)" }} />
 
           <SliderField
             label="Ad length"
@@ -237,39 +252,117 @@ export default function FormatSimulator() {
           />
         </div>
 
-        <p className="text-xs leading-relaxed px-0.5" style={{ color: "var(--text-3)" }}>
-          IAB CTV Benchmarks 2024 · Deloitte Digital Media Trends 2025 · Roku Shoptalk 2025 · Marketing Brew May 2025
-        </p>
-      </div>
-
-      {/* Output panel */}
-      <div className="space-y-4">
-
-        {/* KPI row */}
-        <div className="grid grid-cols-2 gap-4">
-          <KpiCard
-            label="Predicted CTR"
-            value={output.ctrFormatted}
-            subtext="vs. 0.30% standard avg — IAB 2024"
-            color="var(--accent)"
-          />
-          <KpiCard
-            label="Completion rate"
-            value={output.completionFormatted}
-            subtext="CTV avg 78% for 30s · IAB 2024"
-            color="var(--green)"
-          />
-        </div>
-
-        {/* Engagement curve */}
+        {/* AI Recommendation */}
         <div
           className="rounded-xl p-5"
           style={{ background: "var(--surface)", border: "1px solid var(--border)" }}
         >
-          <EngagementCurve
-            data={output.engagementCurve}
-            formatLabel={selectedFormat?.label ?? ""}
-          />
+          <div className="flex items-center justify-between mb-3">
+            <p className="text-xs font-semibold" style={{ color: "var(--text-2)" }}>
+              AI recommendation
+            </p>
+            <button
+              onClick={fetchAI}
+              disabled={ai.loading}
+              className="text-xs px-2.5 py-1 rounded-md transition-all disabled:opacity-50"
+              style={{
+                background: "var(--accent)",
+                color: "#fff",
+                fontWeight: 600,
+                fontFamily: "inherit",
+              }}
+            >
+              {ai.loading ? "…" : "Generate"}
+            </button>
+          </div>
+
+          {ai.loading && (
+            <div className="flex items-center gap-2 text-xs" style={{ color: "var(--text-3)" }}>
+              <div
+                className="w-3 h-3 border-2 rounded-full animate-spin shrink-0"
+                style={{ borderColor: "var(--accent)", borderTopColor: "transparent" }}
+              />
+              Analyzing benchmark data…
+            </div>
+          )}
+
+          {!ai.loading && ai.text && (
+            <p
+              className="text-xs leading-relaxed"
+              style={{ color: ai.error ? "var(--text-3)" : "var(--text-2)" }}
+            >
+              {ai.text}
+            </p>
+          )}
+
+          {!ai.loading && !ai.text && (
+            <p className="text-xs" style={{ color: "var(--text-3)" }}>
+              Data-grounded format recommendation from Claude based on your inputs.
+            </p>
+          )}
+        </div>
+      </aside>
+
+      {/* ── RIGHT: Output ── */}
+      <div className="space-y-4">
+
+        {/* Chart card — the hero element */}
+        <div
+          className="rounded-xl overflow-hidden"
+          style={{ background: "var(--surface)", border: "1px solid var(--border)" }}
+        >
+          {/* Chart header with inline KPIs */}
+          <div
+            className="px-5 pt-5 pb-0 flex items-start justify-between"
+          >
+            <div>
+              <p
+                className="text-xs font-semibold uppercase tracking-widest mb-1"
+                style={{ color: "var(--text-3)" }}
+              >
+                Attention retention curve
+              </p>
+              <p className="text-sm font-medium" style={{ color: "var(--text-2)" }}>
+                {selectedFormat?.label ?? ""}
+              </p>
+            </div>
+
+            {/* Inline KPI stats */}
+            <div className="flex items-start gap-6">
+              <InlineStat
+                label="Predicted CTR"
+                value={output.ctrFormatted}
+                color="var(--accent)"
+              />
+              <div
+                className="w-px h-8 self-center"
+                style={{ background: "var(--border-2)" }}
+              />
+              <InlineStat
+                label="Completion rate"
+                value={output.completionFormatted}
+                color="var(--green)"
+              />
+            </div>
+          </div>
+
+          {/* Chart */}
+          <div className="px-2 pt-2 pb-4">
+            <EngagementCurve
+              data={output.engagementCurve}
+              formatLabel={selectedFormat?.label ?? ""}
+            />
+          </div>
+
+          {/* Benchmark context */}
+          <div
+            className="px-5 pb-4 flex items-center gap-4 text-xs"
+            style={{ color: "var(--text-3)" }}
+          >
+            <span>vs. 0.30% standard CTR avg — IAB 2024</span>
+            <span>·</span>
+            <span>CTV avg 78% completion for 30s — IAB 2024</span>
+          </div>
         </div>
 
         {/* Fatigue score */}
@@ -279,51 +372,6 @@ export default function FormatSimulator() {
           color={output.fatigueColor}
           description={output.fatigueDescription}
         />
-
-        {/* AI recommendation */}
-        <div
-          className="rounded-xl p-5"
-          style={{ background: "var(--surface)", border: "1px solid var(--border)" }}
-        >
-          <div className="flex items-center justify-between mb-3">
-            <p className="text-sm font-medium" style={{ color: "var(--text)" }}>
-              AI format recommendation
-            </p>
-            <button
-              onClick={fetchAI}
-              disabled={ai.loading}
-              className="text-xs px-3 py-1.5 rounded-md transition-opacity disabled:opacity-50"
-              style={{ background: "var(--accent)", color: "#fff", fontWeight: 500 }}
-            >
-              {ai.loading ? "Generating…" : "Generate"}
-            </button>
-          </div>
-
-          {ai.loading && (
-            <div className="flex items-center gap-2 text-sm" style={{ color: "var(--text-2)" }}>
-              <div
-                className="w-3.5 h-3.5 border-2 rounded-full animate-spin shrink-0"
-                style={{ borderColor: "var(--accent)", borderTopColor: "transparent" }}
-              />
-              Analyzing against benchmark data…
-            </div>
-          )}
-
-          {!ai.loading && ai.text && (
-            <p
-              className="text-sm leading-relaxed"
-              style={{ color: ai.error ? "var(--text-3)" : "var(--text-2)" }}
-            >
-              {ai.text}
-            </p>
-          )}
-
-          {!ai.loading && !ai.text && (
-            <p className="text-sm" style={{ color: "var(--text-3)" }}>
-              Get a data-grounded recommendation from Claude based on your current inputs and benchmark data.
-            </p>
-          )}
-        </div>
       </div>
     </div>
   );

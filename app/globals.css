@@ -1,36 +1,43 @@
 @import "tailwindcss";
 
 :root {
-  --bg: #09090b;
-  --surface: #18181b;
-  --surface-2: #27272a;
-  --border: rgba(255, 255, 255, 0.07);
-  --border-2: rgba(255, 255, 255, 0.12);
-  --accent: #8b5cf6;
-  --accent-dim: rgba(139, 92, 246, 0.12);
-  --text: #fafafa;
-  --text-2: #a1a1aa;
-  --text-3: #52525b;
-  --green: #4ade80;
+  --bg: #0c0c10;
+  --surface: #16161d;
+  --surface-2: #1e1e28;
+  --surface-3: #252532;
+  --border: rgba(255, 255, 255, 0.06);
+  --border-2: rgba(255, 255, 255, 0.10);
+  --accent: #7c6af5;
+  --accent-hover: #9184f7;
+  --accent-dim: rgba(124, 106, 245, 0.10);
+  --text: #f0effe;
+  --text-2: #8b8ba7;
+  --text-3: #4a4a60;
+  --green: #34d399;
   --red: #f87171;
   --amber: #fbbf24;
+}
+
+* {
+  box-sizing: border-box;
 }
 
 body {
   background: var(--bg);
   color: var(--text);
-  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-family: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* Range sliders */
+/* ── Range sliders ── */
 input[type="range"] {
   -webkit-appearance: none;
   appearance: none;
   width: 100%;
-  height: 3px;
-  background: var(--surface-2);
-  border-radius: 2px;
+  height: 2px;
+  background: var(--surface-3);
+  border-radius: 1px;
   outline: none;
   cursor: pointer;
 }
@@ -42,32 +49,35 @@ input[type="range"]::-webkit-slider-thumb {
   border-radius: 50%;
   background: var(--accent);
   cursor: pointer;
-  border: 2px solid var(--bg);
-  margin-top: -5.5px;
-  transition: transform 0.1s ease;
+  border: 2.5px solid var(--bg);
+  box-shadow: 0 0 0 1px var(--accent);
+  margin-top: -6px;
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
 }
 
 input[type="range"]::-webkit-slider-thumb:hover {
-  transform: scale(1.15);
+  transform: scale(1.2);
+  box-shadow: 0 0 0 3px rgba(124, 106, 245, 0.2);
 }
 
 input[type="range"]::-webkit-slider-runnable-track {
-  height: 3px;
-  border-radius: 2px;
-  background: var(--surface-2);
+  height: 2px;
+  border-radius: 1px;
+  background: var(--surface-3);
 }
 
 input[type="range"]:focus {
   outline: none;
 }
 
-/* Scrollbar */
+/* ── Select ── */
+select option {
+  background: #1e1e28;
+  color: #f0effe;
+}
+
+/* ── Scrollbar ── */
 ::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--surface-2); border-radius: 2px; }
-
-/* Select options (platform default, dark) */
-select option {
-  background: #27272a;
-  color: #fafafa;
-}
+::-webkit-scrollbar-thumb { background: var(--surface-3); border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: var(--surface-3); }
