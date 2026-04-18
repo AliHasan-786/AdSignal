@@ -1,65 +1,151 @@
-import Image from "next/image";
+"use client";
+
+import { useState } from "react";
+import dynamic from "next/dynamic";
+
+// Dynamic imports with ssr:false to avoid Recharts hydration warnings in Next.js App Router
+const FormatSimulator = dynamic(() => import("@/components/FormatSimulator"), {
+  ssr: false,
+  loading: () => (
+    <div className="h-96 flex items-center justify-center text-gray-600 text-sm">
+      Loading simulator...
+    </div>
+  ),
+});
+
+const CaseStudy = dynamic(() => import("@/components/CaseStudy"), {
+  ssr: false,
+});
+
+const ABTestDesigner = dynamic(() => import("@/components/ABTestDesigner"), {
+  ssr: false,
+  loading: () => (
+    <div className="h-64 flex items-center justify-center text-gray-600 text-sm">
+      Loading A/B designer...
+    </div>
+  ),
+});
+
+const TABS = [
+  { id: "simulator", label: "Format Simulator" },
+  { id: "case-study", label: "Case Study" },
+  { id: "ab-test", label: "A/B Test Designer" },
+] as const;
+
+type TabId = (typeof TABS)[number]["id"];
 
 export default function Home() {
+  const [activeTab, setActiveTab] = useState<TabId>("simulator");
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+    <div className="min-h-screen" style={{ background: "#09090f" }}>
+      {/* Header */}
+      <header className="border-b border-gray-800 px-6 py-4">
+        <div className="max-w-6xl mx-auto flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div
+              className="w-8 h-8 rounded-lg flex items-center justify-center"
+              style={{ background: "#2563eb" }}
             >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 16 16"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M2 12L6 6L9 9L12 4L14 8"
+                  stroke="white"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </div>
+            <div>
+              <h1 className="text-white font-semibold text-lg leading-none">
+                AdSignal
+              </h1>
+              <p className="text-gray-500 text-xs mt-0.5">
+                CTV Ad Format Intelligence
+              </p>
+            </div>
+          </div>
+          <div className="hidden sm:flex items-center gap-4 text-xs text-gray-600">
+            <span>IAB CTV Benchmarks 2024</span>
+            <span>·</span>
+            <span>Deloitte DM Trends 2025</span>
+          </div>
+        </div>
+      </header>
+
+      {/* Hero tagline */}
+      <div
+        className="border-b px-6 py-4"
+        style={{ borderColor: "#1f2937", background: "rgba(17,24,39,0.3)" }}
+      >
+        <div className="max-w-6xl mx-auto">
+          <p className="text-sm text-gray-400 max-w-2xl">
+            Pre-campaign intelligence for CTV ad format selection. Input your
+            ad parameters — see predicted{" "}
+            <span className="text-white">engagement decay</span>,{" "}
+            <span className="text-white">CTR</span>,{" "}
+            <span className="text-white">completion rate</span>, and{" "}
+            <span className="text-white">ad fatigue score</span> before
+            committing budget.
           </p>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+      </div>
+
+      {/* Tabs */}
+      <div className="border-b border-gray-800 px-6">
+        <div className="max-w-6xl mx-auto flex">
+          {TABS.map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              className={`px-4 py-3 text-sm font-medium border-b-2 transition-colors ${
+                activeTab === tab.id
+                  ? "border-blue-500 text-white"
+                  : "border-transparent text-gray-500 hover:text-gray-300"
+              }`}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Content */}
+      <main className="px-6 py-8">
+        <div className="max-w-6xl mx-auto">
+          {activeTab === "simulator" && <FormatSimulator />}
+          {activeTab === "case-study" && <CaseStudy />}
+          {activeTab === "ab-test" && <ABTestDesigner />}
         </div>
       </main>
+
+      {/* Footer */}
+      <footer className="border-t border-gray-800 px-6 py-4 mt-12">
+        <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-gray-600">
+          <p>
+            Built by{" "}
+            <a
+              href="https://github.com/AliHasan-786"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-gray-500 hover:text-gray-300 transition-colors"
+            >
+              Ali Hasan
+            </a>{" "}
+            · Next.js · Recharts · Claude API · Vercel
+          </p>
+          <p>
+            Data: IAB CTV Benchmarks 2024 · Deloitte Digital Media Trends 2025
+          </p>
+        </div>
+      </footer>
     </div>
   );
 }

@@ -1,0 +1,87 @@
+{
+  "sources": [
+    {
+      "id": "iab-ctv-2024",
+      "name": "IAB CTV Benchmarks 2024",
+      "url": "https://www.iab.com/wp-content/uploads/2024/01/IAB_CTV_Video_Ad_Spend_2024.pdf",
+      "description": "Industry benchmarks for CTV ad completion rates, CTR, and engagement by format"
+    },
+    {
+      "id": "deloitte-dmt-2025",
+      "name": "Deloitte Digital Media Trends 2025",
+      "url": "https://www.deloitte.com/us/en/insights/industry/technology/digital-media-trends.html",
+      "description": "47% of ad-supported streaming subscribers would cancel if ad load increased"
+    },
+    {
+      "id": "marketing-brew-2025",
+      "name": "Marketing Brew — Shoppable Ads Coverage (May 2025)",
+      "url": "https://www.marketingbrew.com/stories/2025/05/06/upfronts-shoppable-ads",
+      "description": "Risk of annoying users is real when interactivity isn't intuitive"
+    },
+    {
+      "id": "roku-shoptalk-2025",
+      "name": "Roku at Shoptalk 2025 — Retail Meets the Remote",
+      "url": "https://advertising.roku.com/learn/resources/retail-meets-the-remote-rokus-takeaways-from-shoptalk-2025",
+      "description": "Roku VP of Advertising: 'We need to meet the consumer where they're at in terms of how they want to interact'"
+    }
+  ],
+  "formats": {
+    "standard_15": {
+      "label": "Standard 15s",
+      "baseCTR": 0.003,
+      "baseCompletion": 0.88,
+      "baseFatigue": 3.2,
+      "decayCurve": [100, 97, 94, 91, 88, 85, 82, 79, 76, 73, 70, 68, 65, 63, 61]
+    },
+    "standard_30": {
+      "label": "Standard 30s",
+      "baseCTR": 0.004,
+      "baseCompletion": 0.78,
+      "baseFatigue": 5.8,
+      "decayCurve": [100, 97, 93, 89, 85, 81, 77, 73, 69, 65, 61, 57, 53, 49, 46, 43, 40, 38, 36, 34, 32, 30, 29, 28, 27, 26, 25, 24, 23, 22]
+    },
+    "interactive_choice": {
+      "label": "Interactive Choice Ad",
+      "baseCTR": 0.018,
+      "baseCompletion": 0.82,
+      "baseFatigue": 4.1,
+      "decayCurve": [100, 99, 98, 97, 96, 95, 94, 93, 92, 91, 90, 89, 88, 87, 86, 85, 84, 83, 82, 81, 80, 79, 78, 77, 76, 75, 74, 73, 72, 71]
+    },
+    "shoppable": {
+      "label": "Shoppable / Action Ad",
+      "baseCTR": 0.024,
+      "baseCompletion": 0.76,
+      "baseFatigue": 5.2,
+      "decayCurve": [100, 99, 98, 97, 96, 96, 95, 95, 94, 94, 93, 92, 91, 90, 89, 88, 87, 86, 85, 84, 83, 82, 81, 80, 79, 78, 77, 76, 75, 74]
+    },
+    "pause_ad": {
+      "label": "Pause Ad",
+      "baseCTR": 0.012,
+      "baseCompletion": 0.95,
+      "baseFatigue": 2.1,
+      "decayCurve": [100, 99, 99, 98, 98, 97, 97, 96, 96, 95, 95, 94, 94, 93, 93, 92, 92, 91, 91, 90, 90, 89, 89, 88, 88, 87, 87, 86, 86, 85]
+    },
+    "qr_code": {
+      "label": "QR Code Overlay",
+      "baseCTR": 0.008,
+      "baseCompletion": 0.80,
+      "baseFatigue": 4.5,
+      "decayCurve": [100, 98, 96, 94, 92, 90, 88, 86, 84, 82, 80, 78, 76, 74, 72, 70, 68, 66, 64, 62, 60, 58, 56, 54, 52, 50, 48, 46, 44, 42]
+    }
+  },
+  "categoryMultipliers": {
+    "retail": { "ctr": 1.35, "completion": 0.92, "fatigue": 1.1, "label": "Retail / E-commerce" },
+    "cpg": { "ctr": 0.85, "completion": 0.98, "fatigue": 0.95, "label": "CPG / FMCG" },
+    "auto": { "ctr": 1.15, "completion": 1.05, "fatigue": 1.2, "label": "Automotive" },
+    "finance": { "ctr": 0.90, "completion": 0.95, "fatigue": 0.90, "label": "Financial Services" },
+    "entertainment": { "ctr": 1.20, "completion": 1.08, "fatigue": 0.85, "label": "Entertainment / Streaming" },
+    "travel": { "ctr": 1.10, "completion": 1.02, "fatigue": 1.0, "label": "Travel & Hospitality" },
+    "telecom": { "ctr": 0.95, "completion": 0.97, "fatigue": 1.05, "label": "Telecom / Tech" },
+    "health": { "ctr": 1.05, "completion": 1.01, "fatigue": 0.92, "label": "Health & Wellness" }
+  },
+  "fatigueThresholds": {
+    "low": { "max": 3.5, "label": "Low Risk", "color": "green", "description": "Minimal viewer disruption — safe to run at standard frequency" },
+    "moderate": { "max": 6.0, "label": "Moderate Risk", "color": "yellow", "description": "Monitor completion drop-off; consider frequency capping at 3x/day" },
+    "high": { "max": 10.0, "label": "High Risk", "color": "red", "description": "Strong churn signal — Deloitte (2025) found 47% of subscribers would cancel if ad load increased" }
+  }
+}
