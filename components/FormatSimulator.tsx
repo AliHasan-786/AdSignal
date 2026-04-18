@@ -185,7 +185,7 @@ export default function FormatSimulator() {
         className="rounded-xl p-6"
         style={{ background: "var(--surface)", border: "1px solid var(--border)" }}
       >
-        <TVPrototype />
+        <TVPrototype format={inputs.format} />
       </div>
 
       {/* ── PERFORMANCE PROJECTIONS ── */}

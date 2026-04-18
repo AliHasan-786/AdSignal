@@ -355,17 +355,7 @@ export default function Home() {
             {" "}· Next.js · Recharts · Claude API · Vercel
           </p>
           <p className="text-xs" style={{ color: "var(--text-3)" }}>
-            Built with{" "}
-            <a
-              href="https://claude.ai/code"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="underline underline-offset-2"
-              style={{ color: "var(--text-2)" }}
-            >
-              Claude Code
-            </a>
-            {" "}· Multi-agent workflow · AI-native development
+            Built with Claude Code · IAB CTV Benchmarks 2024 · Deloitte Digital Media Trends 2025
           </p>
         </div>
       </footer>
