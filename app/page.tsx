@@ -7,7 +7,7 @@ import dynamic from "next/dynamic";
 const FormatSimulator = dynamic(() => import("@/components/FormatSimulator"), {
   ssr: false,
   loading: () => (
-    <div className="h-96 flex items-center justify-center text-gray-600 text-sm">
+    <div className="h-96 flex items-center justify-center text-sm" style={{ color: "var(--text-muted)" }}>
       Loading simulator...
     </div>
   ),
@@ -20,16 +20,16 @@ const CaseStudy = dynamic(() => import("@/components/CaseStudy"), {
 const ABTestDesigner = dynamic(() => import("@/components/ABTestDesigner"), {
   ssr: false,
   loading: () => (
-    <div className="h-64 flex items-center justify-center text-gray-600 text-sm">
+    <div className="h-64 flex items-center justify-center text-sm" style={{ color: "var(--text-muted)" }}>
       Loading A/B designer...
     </div>
   ),
 });
 
 const TABS = [
-  { id: "simulator", label: "Format Simulator" },
-  { id: "case-study", label: "Case Study" },
-  { id: "ab-test", label: "A/B Test Designer" },
+  { id: "simulator", label: "Format Simulator", icon: "◈" },
+  { id: "case-study", label: "Case Study", icon: "◉" },
+  { id: "ab-test", label: "A/B Test Designer", icon: "⊞" },
 ] as const;
 
 type TabId = (typeof TABS)[number]["id"];
@@ -38,86 +38,241 @@ export default function Home() {
   const [activeTab, setActiveTab] = useState<TabId>("simulator");
 
   return (
-    <div className="min-h-screen" style={{ background: "#09090f" }}>
-      {/* Header */}
-      <header className="border-b border-gray-800 px-6 py-4">
+    <div className="min-h-screen" style={{ background: "var(--bg-base)" }}>
+
+      {/* ── TOP ACCENT BAR ── */}
+      <div className="hero-gradient-bar h-[3px] w-full" />
+
+      {/* ── HEADER ── */}
+      <header
+        className="px-6 py-5"
+        style={{
+          borderBottom: "1px solid var(--border-subtle)",
+          background: "linear-gradient(180deg, rgba(109,33,168,0.08) 0%, transparent 100%)",
+        }}
+      >
         <div className="max-w-6xl mx-auto flex items-center justify-between">
+
+          {/* Wordmark */}
           <div className="flex items-center gap-3">
+            {/* Logo mark — signal waveform in purple */}
             <div
-              className="w-8 h-8 rounded-lg flex items-center justify-center"
-              style={{ background: "#2563eb" }}
+              className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
+              style={{
+                background: "linear-gradient(135deg, #6B21A8, #7C3AED)",
+                boxShadow: "0 0 18px rgba(124,58,237,0.45)",
+              }}
             >
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 16 16"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                 <path
-                  d="M2 12L6 6L9 9L12 4L14 8"
+                  d="M2 13L5.5 7L8.5 10.5L12 4L16 9L18 7"
                   stroke="white"
-                  strokeWidth="1.5"
+                  strokeWidth="2"
                   strokeLinecap="round"
                   strokeLinejoin="round"
                 />
+                <circle cx="18" cy="7" r="1.5" fill="#F5E642" />
               </svg>
             </div>
             <div>
-              <h1 className="text-white font-semibold text-lg leading-none">
+              <h1
+                className="font-extrabold text-xl leading-none tracking-tight"
+                style={{ color: "var(--text-primary)" }}
+              >
                 AdSignal
               </h1>
-              <p className="text-gray-500 text-xs mt-0.5">
+              <p
+                className="text-xs mt-0.5 font-medium"
+                style={{ color: "var(--accent-purple-light)" }}
+              >
                 CTV Ad Format Intelligence
               </p>
             </div>
           </div>
-          <div className="hidden sm:flex items-center gap-4 text-xs text-gray-600">
-            <span>IAB CTV Benchmarks 2024</span>
-            <span>·</span>
-            <span>Deloitte DM Trends 2025</span>
+
+          {/* Data source badges */}
+          <div className="hidden sm:flex items-center gap-2">
+            {["IAB CTV 2024", "Deloitte DM 2025", "Roku Shoptalk 2025"].map((src) => (
+              <span
+                key={src}
+                className="text-xs px-2.5 py-1 rounded-full font-medium"
+                style={{
+                  background: "rgba(109,40,217,0.12)",
+                  border: "1px solid rgba(109,40,217,0.25)",
+                  color: "var(--text-secondary)",
+                }}
+              >
+                {src}
+              </span>
+            ))}
           </div>
         </div>
       </header>
 
-      {/* Hero tagline */}
+      {/* ── HERO STAT BANNER ── */}
       <div
-        className="border-b px-6 py-4"
-        style={{ borderColor: "#1f2937", background: "rgba(17,24,39,0.3)" }}
+        className="px-6 py-6"
+        style={{
+          borderBottom: "1px solid var(--border-subtle)",
+          background: "linear-gradient(180deg, rgba(109,33,168,0.06) 0%, transparent 100%)",
+        }}
       >
-        <div className="max-w-6xl mx-auto">
-          <p className="text-sm text-gray-400 max-w-2xl">
-            Pre-campaign intelligence for CTV ad format selection. Input your
-            ad parameters — see predicted{" "}
-            <span className="text-white">engagement decay</span>,{" "}
-            <span className="text-white">CTR</span>,{" "}
-            <span className="text-white">completion rate</span>, and{" "}
-            <span className="text-white">ad fatigue score</span> before
-            committing budget.
+        <div className="max-w-6xl mx-auto flex flex-col sm:flex-row sm:items-center sm:justify-between gap-5">
+
+          {/* Primary stat */}
+          <div className="flex items-baseline gap-4">
+            <div>
+              <span
+                className="text-hero-num"
+                style={{ color: "var(--accent-yellow)" }}
+              >
+                10×
+              </span>
+            </div>
+            <div>
+              <p
+                className="text-base font-semibold leading-snug"
+                style={{ color: "var(--text-primary)" }}
+              >
+                higher CTR for interactive formats
+                <br />
+                <span style={{ color: "var(--text-secondary)" }}>
+                  vs. standard 30s pre-roll
+                </span>
+              </p>
+              <p className="text-xs mt-1" style={{ color: "var(--text-muted)" }}>
+                IAB CTV Benchmarks 2024 · 3.01% vs 0.30% baseline
+              </p>
+            </div>
+          </div>
+
+          {/* Secondary stats row */}
+          <div className="flex items-center gap-6">
+            <div className="text-center">
+              <p
+                className="text-2xl font-bold tabular-nums"
+                style={{ color: "var(--accent-yellow)" }}
+              >
+                47%
+              </p>
+              <p className="text-xs mt-0.5" style={{ color: "var(--text-muted)" }}>
+                would cancel if<br />ad load increases
+              </p>
+            </div>
+            <div
+              className="w-px h-10 hidden sm:block"
+              style={{ background: "var(--border-subtle)" }}
+            />
+            <div className="text-center">
+              <p
+                className="text-2xl font-bold tabular-nums"
+                style={{ color: "var(--state-success)" }}
+              >
+                78%
+              </p>
+              <p className="text-xs mt-0.5" style={{ color: "var(--text-muted)" }}>
+                CTV completion<br />rate avg
+              </p>
+            </div>
+            <div
+              className="w-px h-10 hidden sm:block"
+              style={{ background: "var(--border-subtle)" }}
+            />
+            <div className="text-center hidden md:block">
+              <p
+                className="text-2xl font-bold tabular-nums"
+                style={{ color: "var(--accent-purple-light)" }}
+              >
+                $0
+              </p>
+              <p className="text-xs mt-0.5" style={{ color: "var(--text-muted)" }}>
+                pre-campaign<br />tooling today
+              </p>
+            </div>
+          </div>
+
+        </div>
+
+        {/* Tagline */}
+        <div className="max-w-6xl mx-auto mt-4">
+          <p className="text-sm leading-relaxed" style={{ color: "var(--text-secondary)" }}>
+            Input your ad parameters — see predicted{" "}
+            <span style={{ color: "var(--text-primary)" }}>engagement decay</span>,{" "}
+            <span style={{ color: "var(--text-primary)" }}>CTR</span>,{" "}
+            <span style={{ color: "var(--text-primary)" }}>completion rate</span>, and{" "}
+            <span style={{ color: "var(--text-primary)" }}>ad fatigue score</span>{" "}
+            before committing budget.
           </p>
         </div>
       </div>
 
-      {/* Tabs */}
-      <div className="border-b border-gray-800 px-6">
-        <div className="max-w-6xl mx-auto flex">
-          {TABS.map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={`px-4 py-3 text-sm font-medium border-b-2 transition-colors ${
-                activeTab === tab.id
-                  ? "border-blue-500 text-white"
-                  : "border-transparent text-gray-500 hover:text-gray-300"
-              }`}
-            >
-              {tab.label}
-            </button>
-          ))}
+      {/* ── TAB NAVIGATION — pill style ── */}
+      <div
+        className="px-6 py-3"
+        style={{
+          borderBottom: "1px solid var(--border-subtle)",
+          background: "var(--bg-base)",
+          position: "sticky",
+          top: 0,
+          zIndex: 10,
+          backdropFilter: "blur(12px)",
+          WebkitBackdropFilter: "blur(12px)",
+        }}
+      >
+        <div className="max-w-6xl mx-auto">
+          <div
+            className="inline-flex rounded-xl p-1 gap-1"
+            style={{
+              background: "var(--bg-surface)",
+              border: "1px solid var(--border-subtle)",
+            }}
+            role="tablist"
+            aria-label="Navigation tabs"
+          >
+            {TABS.map((tab) => {
+              const isActive = activeTab === tab.id;
+              return (
+                <button
+                  key={tab.id}
+                  role="tab"
+                  aria-selected={isActive}
+                  onClick={() => setActiveTab(tab.id)}
+                  className="px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 flex items-center gap-2"
+                  style={
+                    isActive
+                      ? {
+                          background: "linear-gradient(135deg, #6B21A8, #7C3AED)",
+                          color: "#fff",
+                          boxShadow: "0 0 14px rgba(124,58,237,0.45)",
+                        }
+                      : {
+                          color: "var(--text-secondary)",
+                          background: "transparent",
+                        }
+                  }
+                  onMouseEnter={(e) => {
+                    if (!isActive) {
+                      (e.currentTarget as HTMLButtonElement).style.color = "var(--text-primary)";
+                      (e.currentTarget as HTMLButtonElement).style.background = "rgba(109,40,217,0.12)";
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!isActive) {
+                      (e.currentTarget as HTMLButtonElement).style.color = "var(--text-secondary)";
+                      (e.currentTarget as HTMLButtonElement).style.background = "transparent";
+                    }
+                  }}
+                >
+                  <span aria-hidden="true" className="text-xs opacity-70">{tab.icon}</span>
+                  {tab.label}
+                </button>
+              );
+            })}
+          </div>
         </div>
       </div>
 
-      {/* Content */}
+      {/* ── MAIN CONTENT ── */}
       <main className="px-6 py-8">
         <div className="max-w-6xl mx-auto">
           {activeTab === "simulator" && <FormatSimulator />}
@@ -126,24 +281,28 @@ export default function Home() {
         </div>
       </main>
 
-      {/* Footer */}
-      <footer className="border-t border-gray-800 px-6 py-4 mt-12">
-        <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-gray-600">
+      {/* ── FOOTER ── */}
+      <footer
+        className="px-6 py-5 mt-12"
+        style={{ borderTop: "1px solid var(--border-subtle)" }}
+      >
+        <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2 text-xs" style={{ color: "var(--text-muted)" }}>
           <p>
             Built by{" "}
             <a
               href="https://github.com/AliHasan-786"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-gray-500 hover:text-gray-300 transition-colors"
+              className="transition-colors"
+              style={{ color: "var(--text-secondary)" }}
+              onMouseEnter={(e) => (e.currentTarget.style.color = "var(--accent-purple-light)")}
+              onMouseLeave={(e) => (e.currentTarget.style.color = "var(--text-secondary)")}
             >
               Ali Hasan
             </a>{" "}
             · Next.js · Recharts · Claude API · Vercel
           </p>
-          <p>
-            Data: IAB CTV Benchmarks 2024 · Deloitte Digital Media Trends 2025
-          </p>
+          <p>IAB CTV Benchmarks 2024 · Deloitte Digital Media Trends 2025</p>
         </div>
       </footer>
     </div>

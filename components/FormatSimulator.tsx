@@ -26,6 +26,7 @@ interface AIRecommendation {
   error: boolean;
 }
 
+// ── Slider row ──────────────────────────────────────────────
 function SliderRow({
   label,
   value,
@@ -45,13 +46,21 @@ function SliderRow({
   onChange: (v: number) => void;
   formatValue?: (v: number) => string;
 }) {
+  const displayVal = formatValue ? formatValue(value) : `${value}${unit ?? ""}`;
   return (
     <div>
-      <div className="flex justify-between items-baseline mb-1.5">
-        <label className="text-sm text-gray-400">{label}</label>
-        <span className="text-sm font-semibold text-white tabular-nums">
-          {formatValue ? formatValue(value) : value}
-          {unit && !formatValue ? unit : ""}
+      <div className="flex justify-between items-baseline mb-2">
+        <label className="text-xs font-semibold uppercase tracking-widest" style={{ color: "var(--text-muted)" }}>
+          {label}
+        </label>
+        <span
+          className="text-sm font-bold tabular-nums px-2 py-0.5 rounded-md"
+          style={{
+            color: "var(--accent-purple-light)",
+            background: "rgba(124,58,237,0.12)",
+          }}
+        >
+          {displayVal}
         </span>
       </div>
       <input
@@ -61,9 +70,15 @@ function SliderRow({
         step={step}
         value={value}
         onChange={(e) => onChange(Number(e.target.value))}
-        className="w-full h-1.5 bg-gray-700 rounded-full appearance-none cursor-pointer accent-blue-500"
+        className="w-full appearance-none cursor-pointer"
+        style={{ accentColor: "var(--accent-purple)" }}
+        aria-label={label}
+        aria-valuemin={min}
+        aria-valuemax={max}
+        aria-valuenow={value}
+        aria-valuetext={displayVal}
       />
-      <div className="flex justify-between text-xs text-gray-600 mt-1">
+      <div className="flex justify-between text-xs mt-1" style={{ color: "var(--text-muted)" }}>
         <span>{min}{unit}</span>
         <span>{max}{unit}</span>
       </div>
@@ -71,6 +86,89 @@ function SliderRow({
   );
 }
 
+// ── Select ───────────────────────────────────────────────────
+function StyledSelect({
+  value,
+  onChange,
+  children,
+  label,
+}: {
+  value: string;
+  onChange: (v: string) => void;
+  children: React.ReactNode;
+  label: string;
+}) {
+  return (
+    <div>
+      <label
+        className="text-xs font-semibold uppercase tracking-widest block mb-2"
+        style={{ color: "var(--text-muted)" }}
+      >
+        {label}
+      </label>
+      <select
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        className="w-full rounded-lg px-3 py-2.5 text-sm font-medium focus:outline-none transition-colors"
+        style={{
+          background: "var(--bg-input)",
+          border: "1px solid var(--border-default)",
+          color: "var(--text-primary)",
+        }}
+        onFocus={(e) => (e.currentTarget.style.borderColor = "var(--accent-purple)")}
+        onBlur={(e) => (e.currentTarget.style.borderColor = "var(--border-default)")}
+      >
+        {children}
+      </select>
+    </div>
+  );
+}
+
+// ── KPI card ─────────────────────────────────────────────────
+function KpiCard({
+  label,
+  value,
+  subtext,
+  accentColor,
+  isHero = false,
+}: {
+  label: string;
+  value: string;
+  subtext: string;
+  accentColor: string;
+  isHero?: boolean;
+}) {
+  return (
+    <div
+      className="rounded-xl p-5 flex flex-col gap-1"
+      style={{
+        background: "var(--bg-surface)",
+        border: `1px solid ${isHero ? "rgba(124,58,237,0.40)" : "var(--border-subtle)"}`,
+        boxShadow: isHero
+          ? "0 0 0 1px rgba(124,58,237,0.20), 0 4px 24px rgba(109,40,217,0.15)"
+          : undefined,
+      }}
+    >
+      <p
+        className="text-xs font-bold uppercase tracking-widest"
+        style={{ color: "var(--text-muted)" }}
+      >
+        {label}
+      </p>
+      <p
+        className="font-extrabold tabular-nums leading-none"
+        style={{ fontSize: "2.5rem", color: accentColor, letterSpacing: "-0.02em" }}
+      >
+        {value}
+      </p>
+      <p className="text-xs mt-0.5" style={{ color: "var(--text-muted)" }}>
+        {subtext}
+      </p>
+    </div>
+  );
+}
+
+// ── Main component ────────────────────────────────────────────
 export default function FormatSimulator() {
   const [inputs, setInputs] = useState(DEFAULT_INPUTS);
   const [output, setOutput] = useState<SimulatorOutput>(() =>
@@ -116,49 +214,52 @@ export default function FormatSimulator() {
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-      {/* Controls */}
-      <div className="lg:col-span-1 space-y-6">
-        <div className="bg-gray-900 rounded-xl border border-gray-800 p-5">
-          <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-widest mb-4">
+
+      {/* ── LEFT: Controls ── */}
+      <div className="lg:col-span-1 space-y-5">
+        <div
+          className="rounded-xl p-5"
+          style={{
+            background: "var(--bg-surface)",
+            border: "1px solid var(--border-subtle)",
+          }}
+        >
+          <h2
+            className="text-xs font-bold uppercase tracking-widest mb-5 flex items-center gap-2"
+            style={{ color: "var(--text-muted)" }}
+          >
+            <span
+              className="inline-block w-1.5 h-4 rounded-full"
+              style={{ background: "var(--accent-purple)" }}
+              aria-hidden="true"
+            />
             Ad Configuration
           </h2>
 
           <div className="space-y-5">
-            <div>
-              <label className="text-sm text-gray-400 block mb-1.5">
-                Format Type
-              </label>
-              <select
-                value={inputs.format}
-                onChange={(e) => set("format")(e.target.value as FormatKey)}
-                className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2.5 text-sm text-white focus:outline-none focus:border-blue-500 transition-colors"
-              >
-                {formatOptions.map((opt) => (
-                  <option key={opt.value} value={opt.value}>
-                    {opt.label}
-                  </option>
-                ))}
-              </select>
-            </div>
+            <StyledSelect
+              label="Format Type"
+              value={inputs.format}
+              onChange={(v) => set("format")(v as FormatKey)}
+            >
+              {formatOptions.map((opt) => (
+                <option key={opt.value} value={opt.value}>
+                  {opt.label}
+                </option>
+              ))}
+            </StyledSelect>
 
-            <div>
-              <label className="text-sm text-gray-400 block mb-1.5">
-                Product Category
-              </label>
-              <select
-                value={inputs.category}
-                onChange={(e) =>
-                  set("category")(e.target.value as CategoryKey)
-                }
-                className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2.5 text-sm text-white focus:outline-none focus:border-blue-500 transition-colors"
-              >
-                {categoryOptions.map((opt) => (
-                  <option key={opt.value} value={opt.value}>
-                    {opt.label}
-                  </option>
-                ))}
-              </select>
-            </div>
+            <StyledSelect
+              label="Product Category"
+              value={inputs.category}
+              onChange={(v) => set("category")(v as CategoryKey)}
+            >
+              {categoryOptions.map((opt) => (
+                <option key={opt.value} value={opt.value}>
+                  {opt.label}
+                </option>
+              ))}
+            </StyledSelect>
 
             <SliderRow
               label="Ad Length"
@@ -194,46 +295,50 @@ export default function FormatSimulator() {
           </div>
         </div>
 
-        {/* Benchmarks source */}
-        <div className="text-xs text-gray-600 px-1 space-y-1">
-          <p className="font-medium text-gray-500">Data sources</p>
-          <p>
+        {/* Data sources */}
+        <div className="px-1 space-y-1">
+          <p
+            className="text-xs font-bold uppercase tracking-widest"
+            style={{ color: "var(--text-muted)" }}
+          >
+            Data sources
+          </p>
+          <p className="text-xs leading-relaxed" style={{ color: "var(--text-muted)" }}>
             IAB CTV Benchmarks 2024 · Deloitte Digital Media Trends 2025 ·
-            Roku Shoptalk 2025 · Marketing Brew (May 2025)
+            Roku Shoptalk 2025 · Marketing Brew May 2025
           </p>
         </div>
       </div>
 
-      {/* Outputs */}
+      {/* ── RIGHT: Outputs ── */}
       <div className="lg:col-span-2 space-y-5">
+
         {/* KPI row */}
         <div className="grid grid-cols-2 gap-4">
-          <div className="bg-gray-900 rounded-xl border border-gray-800 p-4">
-            <p className="text-xs text-gray-500 uppercase tracking-wider mb-1">
-              Predicted CTR
-            </p>
-            <p className="text-3xl font-bold text-white tabular-nums">
-              {output.ctrFormatted}
-            </p>
-            <p className="text-xs text-gray-600 mt-1">
-              vs. 0.30% standard avg — IAB 2024
-            </p>
-          </div>
-          <div className="bg-gray-900 rounded-xl border border-gray-800 p-4">
-            <p className="text-xs text-gray-500 uppercase tracking-wider mb-1">
-              Completion Rate
-            </p>
-            <p className="text-3xl font-bold text-white tabular-nums">
-              {output.completionFormatted}
-            </p>
-            <p className="text-xs text-gray-600 mt-1">
-              CTV avg 78% for 30s · IAB 2024
-            </p>
-          </div>
+          <KpiCard
+            label="Predicted CTR"
+            value={output.ctrFormatted}
+            subtext="vs. 0.30% standard avg — IAB 2024"
+            accentColor="var(--accent-yellow)"
+            isHero
+          />
+          <KpiCard
+            label="Completion Rate"
+            value={output.completionFormatted}
+            subtext="CTV avg 78% for 30s · IAB 2024"
+            accentColor="var(--state-success)"
+          />
         </div>
 
-        {/* Engagement curve */}
-        <div className="bg-gray-900 rounded-xl border border-gray-800 p-5">
+        {/* Engagement curve — HERO */}
+        <div
+          className="rounded-xl p-6"
+          style={{
+            background: "var(--bg-surface)",
+            border: "1px solid var(--border-default)",
+            boxShadow: "0 0 0 1px rgba(124,58,237,0.15), 0 8px 32px rgba(109,40,217,0.12)",
+          }}
+        >
           <EngagementCurve
             data={output.engagementCurve}
             formatLabel={selectedFormat?.label ?? ""}
@@ -249,41 +354,71 @@ export default function FormatSimulator() {
         />
 
         {/* AI recommendation */}
-        <div className="bg-gray-900 rounded-xl border border-gray-800 p-5">
-          <div className="flex items-center justify-between mb-3">
-            <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-widest">
-              AI Format Recommendation
-            </h3>
+        <div
+          className="rounded-xl p-5"
+          style={{
+            background: "var(--bg-surface)",
+            border: "1px solid var(--border-subtle)",
+          }}
+        >
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-2">
+              <span
+                className="inline-block w-1.5 h-4 rounded-full"
+                style={{ background: "linear-gradient(to bottom, #A855F7, #F5E642)" }}
+                aria-hidden="true"
+              />
+              <h3
+                className="text-xs font-bold uppercase tracking-widest"
+                style={{ color: "var(--text-muted)" }}
+              >
+                AI Format Recommendation
+              </h3>
+            </div>
+
             <button
               onClick={fetchAIRecommendation}
               disabled={ai.loading}
-              className="text-xs text-blue-400 hover:text-blue-300 border border-blue-800 hover:border-blue-600 rounded-lg px-3 py-1.5 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="text-xs font-bold px-4 py-2 rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+              style={{
+                background: ai.loading
+                  ? "rgba(124,58,237,0.15)"
+                  : "linear-gradient(135deg, #6B21A8, #7C3AED)",
+                color: "#fff",
+                boxShadow: ai.loading ? "none" : "0 0 12px rgba(124,58,237,0.40)",
+                border: "1px solid rgba(124,58,237,0.40)",
+              }}
             >
               {ai.loading ? "Generating..." : "Generate"}
             </button>
           </div>
 
           {ai.loading && (
-            <div className="flex items-center gap-2 text-sm text-gray-400">
-              <div className="w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
+            <div
+              className="flex items-center gap-3 text-sm py-2"
+              style={{ color: "var(--text-secondary)" }}
+            >
+              <div
+                className="w-4 h-4 border-2 border-t-transparent rounded-full animate-spin flex-shrink-0"
+                style={{ borderColor: "var(--accent-purple)", borderTopColor: "transparent" }}
+              />
               Analyzing format parameters against benchmark data...
             </div>
           )}
 
           {!ai.loading && ai.text && (
             <p
-              className={`text-sm leading-relaxed ${
-                ai.error ? "text-gray-500" : "text-gray-300"
-              }`}
+              className="text-sm leading-relaxed"
+              style={{ color: ai.error ? "var(--text-muted)" : "var(--text-secondary)" }}
             >
               {ai.text}
             </p>
           )}
 
           {!ai.loading && !ai.text && (
-            <p className="text-sm text-gray-600">
+            <p className="text-sm" style={{ color: "var(--text-muted)" }}>
               Click Generate to get a data-grounded format recommendation from
-              Claude based on your current inputs.
+              Claude based on your current inputs and benchmark data.
             </p>
           )}
         </div>

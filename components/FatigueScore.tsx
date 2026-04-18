@@ -7,27 +7,34 @@ interface FatigueScoreProps {
   description: string;
 }
 
+// Token maps per severity state
 const colorMap = {
   green: {
-    bg: "bg-emerald-900/30",
-    border: "border-emerald-700/50",
-    text: "text-emerald-400",
-    bar: "bg-emerald-500",
-    dot: "bg-emerald-400",
+    bg: "rgba(52,211,153,0.06)",
+    border: "rgba(52,211,153,0.25)",
+    textAccent: "#34D399",
+    bar: "linear-gradient(90deg, #059669, #34D399)",
+    badgeBg: "rgba(52,211,153,0.12)",
+    icon: "✓",
+    isPulse: false,
   },
   yellow: {
-    bg: "bg-amber-900/30",
-    border: "border-amber-700/50",
-    text: "text-amber-400",
-    bar: "bg-amber-500",
-    dot: "bg-amber-400",
+    bg: "rgba(251,191,36,0.06)",
+    border: "rgba(251,191,36,0.25)",
+    textAccent: "#FBBF24",
+    bar: "linear-gradient(90deg, #D97706, #FBBF24)",
+    badgeBg: "rgba(251,191,36,0.12)",
+    icon: "⚠",
+    isPulse: false,
   },
   red: {
-    bg: "bg-red-900/30",
-    border: "border-red-700/50",
-    text: "text-red-400",
-    bar: "bg-red-500",
-    dot: "bg-red-400",
+    bg: "rgba(239,68,68,0.07)",
+    border: "rgba(239,68,68,0.30)",
+    textAccent: "#F87171",
+    bar: "linear-gradient(90deg, #DC2626, #F87171)",
+    badgeBg: "rgba(239,68,68,0.15)",
+    icon: "!",
+    isPulse: true,
   },
 };
 
@@ -37,46 +44,122 @@ export default function FatigueScore({
   color,
   description,
 }: FatigueScoreProps) {
-  const c = colorMap[color as keyof typeof colorMap] || colorMap.green;
+  const c = colorMap[color as keyof typeof colorMap] ?? colorMap.green;
   const pct = (score / 10) * 100;
 
   return (
-    <div className={`rounded-xl border ${c.border} ${c.bg} p-4`}>
-      <div className="flex items-center justify-between mb-3">
-        <div className="flex items-center gap-2">
-          <span className={`w-2 h-2 rounded-full ${c.dot}`} />
-          <h3 className="text-sm font-medium text-gray-300 uppercase tracking-wider">
-            Ad Fatigue Score
-          </h3>
-        </div>
-        <div className="flex items-baseline gap-1">
-          <span className={`text-3xl font-bold tabular-nums ${c.text}`}>
-            {score.toFixed(1)}
+    <div
+      className="rounded-xl p-5"
+      style={{
+        background: c.bg,
+        border: `1px solid ${c.border}`,
+        boxShadow: c.isPulse ? `0 0 24px ${c.border}` : undefined,
+      }}
+    >
+      {/* Top row: label + score number */}
+      <div className="flex items-start justify-between mb-4">
+        <div className="flex items-center gap-2.5">
+          {/* State icon */}
+          <span
+            className={`w-7 h-7 rounded-lg flex items-center justify-center text-sm font-black flex-shrink-0 ${c.isPulse ? "danger-pulse" : ""}`}
+            style={{
+              background: c.badgeBg,
+              color: c.textAccent,
+              border: `1px solid ${c.border}`,
+            }}
+            aria-hidden="true"
+          >
+            {c.icon}
           </span>
-          <span className="text-gray-500 text-sm">/10</span>
+          <div>
+            <h3
+              className="text-xs font-bold uppercase tracking-widest"
+              style={{ color: "var(--text-muted)" }}
+            >
+              Ad Fatigue Score
+            </h3>
+            <p
+              className={`text-xs font-bold uppercase tracking-wide mt-0.5 ${c.isPulse ? "danger-pulse" : ""}`}
+              style={{ color: c.textAccent }}
+            >
+              {label}
+            </p>
+          </div>
+        </div>
+
+        {/* Score number — big and prominent */}
+        <div className="text-right">
+          <div className="flex items-baseline gap-1">
+            <span
+              className="font-extrabold tabular-nums leading-none"
+              style={{
+                fontSize: "3rem",
+                color: c.textAccent,
+                letterSpacing: "-0.03em",
+                textShadow: c.isPulse ? `0 0 20px ${c.textAccent}` : undefined,
+              }}
+            >
+              {score.toFixed(1)}
+            </span>
+            <span
+              className="text-sm font-medium"
+              style={{ color: "var(--text-muted)" }}
+            >
+              /10
+            </span>
+          </div>
         </div>
       </div>
 
-      <div className="w-full bg-gray-800 rounded-full h-2 mb-3">
+      {/* Progress bar */}
+      <div
+        className="w-full rounded-full h-2.5 mb-4 overflow-hidden"
+        style={{ background: "rgba(0,0,0,0.25)" }}
+        role="progressbar"
+        aria-valuenow={score}
+        aria-valuemin={0}
+        aria-valuemax={10}
+        aria-label={`Fatigue score: ${score.toFixed(1)} out of 10`}
+      >
         <div
-          className={`h-2 rounded-full transition-all duration-500 ${c.bar}`}
-          style={{ width: `${pct}%` }}
+          className="h-2.5 rounded-full transition-all duration-700"
+          style={{
+            width: `${pct}%`,
+            background: c.bar,
+            boxShadow: c.isPulse ? `0 0 8px ${c.textAccent}` : undefined,
+          }}
         />
       </div>
 
-      <div className="flex items-start gap-2">
-        <span className={`text-xs font-semibold uppercase tracking-wide ${c.text}`}>
-          {label}
-        </span>
-        <span className="text-gray-500 text-xs">—</span>
-        <span className="text-gray-400 text-xs leading-snug">{description}</span>
+      {/* Scale markers */}
+      <div
+        className="flex justify-between text-xs mb-4"
+        style={{ color: "var(--text-muted)" }}
+      >
+        <span>Low (1)</span>
+        <span>Moderate (5)</span>
+        <span>High (10)</span>
       </div>
 
-      <div className="mt-3 pt-3 border-t border-gray-800">
-        <p className="text-xs text-gray-600">
-          Source: Deloitte Digital Media Trends 2025 · IAB CTV Benchmarks 2024
-        </p>
+      {/* Description */}
+      <div
+        className="rounded-lg px-4 py-3 text-sm leading-relaxed"
+        style={{
+          background: "rgba(0,0,0,0.20)",
+          border: `1px solid ${c.border}`,
+          color: "var(--text-secondary)",
+        }}
+      >
+        {description}
       </div>
+
+      {/* Source */}
+      <p
+        className="text-xs mt-3"
+        style={{ color: "var(--text-muted)" }}
+      >
+        Source: Deloitte Digital Media Trends 2025 · IAB CTV Benchmarks 2024
+      </p>
     </div>
   );
 }
