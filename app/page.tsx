@@ -12,7 +12,14 @@ const FormatSimulator = dynamic(() => import("@/components/FormatSimulator"), {
   ),
 });
 
-const CaseStudy = dynamic(() => import("@/components/CaseStudy"), { ssr: false });
+const CaseStudy = dynamic(() => import("@/components/CaseStudy"), {
+  ssr: false,
+  loading: () => (
+    <div className="h-64 flex items-center justify-center text-sm" style={{ color: "var(--text-3)" }}>
+      Loading…
+    </div>
+  ),
+});
 
 const ABTestDesigner = dynamic(() => import("@/components/ABTestDesigner"), {
   ssr: false,
@@ -24,14 +31,28 @@ const ABTestDesigner = dynamic(() => import("@/components/ABTestDesigner"), {
 });
 
 const TABS = [
-  { id: "simulator", label: "Simulator" },
-  { id: "case-study", label: "Case Study" },
-  { id: "ab-test", label: "A/B Test Designer" },
+  {
+    id: "case-study",
+    label: "The Problem",
+    step: "01",
+    hint: "Why this exists",
+  },
+  {
+    id: "simulator",
+    label: "Simulate",
+    step: "02",
+    hint: "Try the tool",
+  },
+  {
+    id: "ab-test",
+    label: "Run a Test",
+    step: "03",
+    hint: "Design an experiment",
+  },
 ] as const;
 
 type TabId = (typeof TABS)[number]["id"];
 
-// Signal bars logo mark — 4 bars of increasing height
 function LogoMark() {
   return (
     <svg width="18" height="15" viewBox="0 0 18 15" fill="none" aria-hidden="true">
@@ -43,8 +64,50 @@ function LogoMark() {
   );
 }
 
+function NextStepButton({
+  label,
+  onClick,
+}: {
+  label: string;
+  onClick: () => void;
+}) {
+  return (
+    <div
+      className="mt-12 pt-8 flex justify-end"
+      style={{ borderTop: "1px solid var(--border)" }}
+    >
+      <button
+        onClick={onClick}
+        className="flex items-center gap-2 text-sm px-4 py-2 rounded-lg transition-all"
+        style={{
+          background: "var(--surface)",
+          border: "1px solid var(--border-2)",
+          color: "var(--text-2)",
+          fontFamily: "inherit",
+        }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.borderColor = "var(--accent)";
+          e.currentTarget.style.color = "var(--text)";
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.borderColor = "var(--border-2)";
+          e.currentTarget.style.color = "var(--text-2)";
+        }}
+      >
+        {label}
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+          <path d="M3 7h8M8 4l3 3-3 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      </button>
+    </div>
+  );
+}
+
 export default function Home() {
-  const [activeTab, setActiveTab] = useState<TabId>("simulator");
+  const [activeTab, setActiveTab] = useState<TabId>("case-study");
+
+  const currentIndex = TABS.findIndex((t) => t.id === activeTab);
+  const nextTab = TABS[currentIndex + 1];
 
   return (
     <div className="min-h-screen flex flex-col" style={{ background: "var(--bg)" }}>
@@ -91,6 +154,14 @@ export default function Home() {
                       : "1px solid transparent",
                   }}
                 >
+                  <span
+                    className="mr-1.5 text-xs tabular-nums"
+                    style={{
+                      color: activeTab === tab.id ? "var(--accent)" : "var(--text-3)",
+                    }}
+                  >
+                    {tab.step}
+                  </span>
                   {tab.label}
                 </button>
               ))}
@@ -118,60 +189,92 @@ export default function Home() {
       {/* ── Hero ── */}
       <div style={{ borderBottom: "1px solid var(--border)", background: "var(--surface)" }}>
         <div className="max-w-5xl mx-auto px-6 py-10">
-          <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6">
-            <div>
-              <p
-                className="text-xs font-semibold uppercase tracking-widest mb-3"
-                style={{ color: "var(--accent)" }}
-              >
-                CTV Ad Format Intelligence
-              </p>
-              <h1
-                className="font-extrabold leading-tight mb-3"
-                style={{ fontSize: "2.25rem", letterSpacing: "-0.04em", color: "var(--text)" }}
-              >
-                Know before you spend.
-              </h1>
-              <p
-                className="text-base leading-relaxed"
-                style={{ color: "var(--text-2)", maxWidth: "52ch" }}
-              >
-                Predict engagement decay, CTR, completion rate, and ad fatigue
-                for any CTV format — before committing budget.
-              </p>
-            </div>
 
-            {/* Stat trio */}
-            <div
-              className="flex items-center gap-6 shrink-0 rounded-xl px-6 py-4"
-              style={{ background: "var(--surface-2)", border: "1px solid var(--border-2)" }}
-            >
-              {[
-                { value: "10×", label: "CTR lift", sub: "interactive vs. standard" },
-                { value: "47%", label: "churn risk", sub: "if ad load increases" },
-                { value: "$0", label: "tools exist", sub: "pre-campaign today" },
-              ].map((s, i) => (
-                <div key={s.label} className="flex items-start gap-6">
-                  {i > 0 && (
-                    <div className="w-px h-10 self-center" style={{ background: "var(--border-2)" }} />
-                  )}
-                  <div className="text-center">
-                    <p
-                      className="font-extrabold tabular-nums leading-none mb-1"
-                      style={{ fontSize: "1.5rem", color: "var(--text)", letterSpacing: "-0.03em" }}
-                    >
-                      {s.value}
-                    </p>
-                    <p className="text-xs font-semibold" style={{ color: "var(--text-2)" }}>
-                      {s.label}
-                    </p>
-                    <p className="text-xs" style={{ color: "var(--text-3)" }}>
-                      {s.sub}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
+          <p
+            className="text-xs font-semibold uppercase tracking-widest mb-3"
+            style={{ color: "var(--accent)" }}
+          >
+            CTV Ad Format Intelligence
+          </p>
+          <h1
+            className="font-extrabold leading-tight mb-3"
+            style={{ fontSize: "2.25rem", letterSpacing: "-0.04em", color: "var(--text)" }}
+          >
+            Know before you spend.
+          </h1>
+          <p
+            className="text-base leading-relaxed mb-8"
+            style={{ color: "var(--text-2)", maxWidth: "52ch" }}
+          >
+            CTV advertisers commit real budget to ad formats with no way to predict performance
+            before launch. AdSignal simulates engagement decay, CTR, completion rate, and fatigue
+            risk — so you can optimize format selection before the campaign goes live.
+          </p>
+
+          {/* 3-step story flow */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-0 rounded-xl overflow-hidden"
+            style={{ border: "1px solid var(--border)" }}>
+            {[
+              {
+                step: "01",
+                tab: "case-study" as TabId,
+                title: "Understand the problem",
+                body: "IAB and Deloitte data show CTV advertisers are flying blind — no pre-campaign format prediction tools exist.",
+                cta: "Read the case →",
+              },
+              {
+                step: "02",
+                tab: "simulator" as TabId,
+                title: "Simulate your format",
+                body: "Configure format type, ad length, and frequency. See predicted CTR, completion rate, and engagement decay update live.",
+                cta: "Try the simulator →",
+              },
+              {
+                step: "03",
+                tab: "ab-test" as TabId,
+                title: "Design a valid test",
+                body: "Once you've picked a format, calculate the sample size and test duration you need for a statistically rigorous result.",
+                cta: "Build the test →",
+              },
+            ].map((s, i) => (
+              <button
+                key={s.step}
+                onClick={() => setActiveTab(s.tab)}
+                className="text-left p-5 transition-colors"
+                style={{
+                  background: activeTab === s.tab ? "var(--surface-2)" : "var(--surface)",
+                  borderLeft: i > 0 ? "1px solid var(--border)" : undefined,
+                  borderBottom: "none",
+                  fontFamily: "inherit",
+                  cursor: "pointer",
+                }}
+                onMouseEnter={(e) => {
+                  if (activeTab !== s.tab) e.currentTarget.style.background = "var(--surface-2)";
+                }}
+                onMouseLeave={(e) => {
+                  if (activeTab !== s.tab) e.currentTarget.style.background = "var(--surface)";
+                }}
+              >
+                <p
+                  className="text-xs font-semibold tabular-nums mb-2"
+                  style={{ color: activeTab === s.tab ? "var(--accent)" : "var(--text-3)" }}
+                >
+                  {s.step}
+                </p>
+                <p className="text-sm font-semibold mb-1.5" style={{ color: "var(--text)" }}>
+                  {s.title}
+                </p>
+                <p className="text-xs leading-relaxed mb-3" style={{ color: "var(--text-2)" }}>
+                  {s.body}
+                </p>
+                <p
+                  className="text-xs font-medium"
+                  style={{ color: activeTab === s.tab ? "var(--accent)" : "var(--text-3)" }}
+                >
+                  {s.cta}
+                </p>
+              </button>
+            ))}
           </div>
 
           {/* Source bar */}
@@ -205,50 +308,29 @@ export default function Home() {
       </div>
 
       {/* ── Content ── */}
-      <main className="flex-1 max-w-5xl mx-auto w-full px-6 pb-20">
-
-        {/* Tab context strip */}
-        {activeTab === "simulator" && (
-          <div
-            className="flex items-start gap-3 px-4 py-3 my-6 rounded-lg text-sm"
-            style={{ background: "var(--surface)", border: "1px solid var(--border)" }}
-          >
-            <span style={{ color: "var(--accent)", fontSize: "1rem", lineHeight: 1.4 }}>①</span>
-            <span style={{ color: "var(--text-2)" }}>
-              <span style={{ color: "var(--text)", fontWeight: 500 }}>Choose a format and category on the left.</span>
-              {" "}The chart updates live — watch how attention drops over time, and check the CTR and completion rate predictions at the top. When you&apos;re ready, hit <strong style={{ color: "var(--text)" }}>Generate</strong> for an AI recommendation.
-            </span>
-          </div>
-        )}
-
+      <main className="flex-1 max-w-5xl mx-auto w-full px-6 pt-8 pb-20">
         {activeTab === "case-study" && (
-          <div
-            className="flex items-start gap-3 px-4 py-3 my-6 rounded-lg text-sm"
-            style={{ background: "var(--surface)", border: "1px solid var(--border)" }}
-          >
-            <span style={{ color: "var(--accent)", fontSize: "1rem", lineHeight: 1.4 }}>②</span>
-            <span style={{ color: "var(--text-2)" }}>
-              <span style={{ color: "var(--text)", fontWeight: 500 }}>The PM thinking behind AdSignal.</span>
-              {" "}The problem statement, market research, feature prioritization (RICE), competitive teardown, and success metrics.
-            </span>
-          </div>
+          <>
+            <CaseStudy />
+            {nextTab && (
+              <NextStepButton
+                label={`Next: ${nextTab.label} — ${nextTab.hint}`}
+                onClick={() => setActiveTab(nextTab.id)}
+              />
+            )}
+          </>
         )}
-
-        {activeTab === "ab-test" && (
-          <div
-            className="flex items-start gap-3 px-4 py-3 my-6 rounded-lg text-sm"
-            style={{ background: "var(--surface)", border: "1px solid var(--border)" }}
-          >
-            <span style={{ color: "var(--accent)", fontSize: "1rem", lineHeight: 1.4 }}>③</span>
-            <span style={{ color: "var(--text-2)" }}>
-              <span style={{ color: "var(--text)", fontWeight: 500 }}>Design a statistically valid A/B test before committing budget.</span>
-              {" "}Set your baseline metric, the lift you need to detect, and your traffic — the calculator tells you how long the test needs to run.
-            </span>
-          </div>
+        {activeTab === "simulator" && (
+          <>
+            <FormatSimulator />
+            {nextTab && (
+              <NextStepButton
+                label={`Next: ${nextTab.label} — ${nextTab.hint}`}
+                onClick={() => setActiveTab(nextTab.id)}
+              />
+            )}
+          </>
         )}
-
-        {activeTab === "simulator" && <FormatSimulator />}
-        {activeTab === "case-study" && <CaseStudy />}
         {activeTab === "ab-test" && <ABTestDesigner />}
       </main>
 
