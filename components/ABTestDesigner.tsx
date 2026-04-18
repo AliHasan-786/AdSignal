@@ -348,44 +348,47 @@ export default function ABTestDesigner() {
             <p className="text-sm font-medium mb-4" style={{ color: "var(--text)" }}>
               Control vs. treatment — projected {metricLabel}
             </p>
+            <div style={{ background: "var(--surface)", borderRadius: "8px" }}>
             <ResponsiveContainer width="100%" height={150}>
-              <BarChart data={barData} margin={{ top: 5, right: 5, left: -22, bottom: 0 }}>
-                <CartesianGrid
-                  strokeDasharray="3 3"
-                  stroke="rgba(255,255,255,0.04)"
-                  vertical={false}
-                />
+              <BarChart
+                data={barData}
+                margin={{ top: 5, right: 5, left: -10, bottom: 0 }}
+                style={{ background: "transparent" }}
+              >
                 <XAxis
                   dataKey="name"
-                  tick={{ fill: "#71717a", fontSize: 12 }}
+                  tick={{ fill: "#8b8ba7", fontSize: 12 }}
                   tickLine={false}
                   axisLine={false}
                 />
                 <YAxis
-                  domain={[0, (dataMax: number) => Math.ceil(dataMax * 1.4 * 10) / 10]}
-                  tick={{ fill: "#52525b", fontSize: 11 }}
+                  domain={[0, (dataMax: number) => Math.ceil(dataMax * 1.5 * 10) / 10]}
+                  tick={{ fill: "#8b8ba7", fontSize: 11 }}
                   tickLine={false}
                   axisLine={false}
                   tickFormatter={(v) => `${v}%`}
+                  width={40}
                 />
                 <Tooltip
                   formatter={(v) => [`${v}%`, metricLabel]}
                   contentStyle={{
-                    background: "var(--surface-2)",
-                    border: "1px solid var(--border-2)",
+                    background: "#1e1e28",
+                    border: "1px solid rgba(255,255,255,0.10)",
                     borderRadius: "8px",
                     fontSize: "12px",
-                    color: "var(--text)",
+                    color: "#f0effe",
                   }}
-                  labelStyle={{ color: "var(--text-2)" }}
+                  labelStyle={{ color: "#8b8ba7" }}
+                  cursor={{ fill: "rgba(255,255,255,0.03)" }}
                 />
-                <Bar dataKey="value" radius={[4, 4, 0, 0]}>
+                <Bar dataKey="value" radius={[4, 4, 0, 0]} maxBarSize={80}>
                   {barData.map((entry, i) => (
                     <Cell key={i} fill={entry.color} />
                   ))}
                 </Bar>
               </BarChart>
             </ResponsiveContainer>
+            </div>
             <div
               className="mt-3 pt-3 grid grid-cols-2 gap-4 text-xs"
               style={{ borderTop: "1px solid var(--border)" }}

@@ -81,7 +81,7 @@ function TableHead({ cols }: { cols: string[] }) {
         {cols.map((c) => (
           <th
             key={c}
-            className="text-left pb-2 pr-4 text-xs font-medium"
+            className="text-left pb-2 pr-4 text-xs font-medium whitespace-nowrap"
             style={{ color: "var(--text-3)" }}
           >
             {c}
@@ -109,8 +109,8 @@ export default function CaseStudy() {
         <StatCard
           stat="$40K"
           label="wasted without pre-campaign prediction"
-          source="r/PPC · March 2025"
-          url="https://reddit.com/r/PPC"
+          source="r/PPC — CTV campaign post-mortem thread"
+          url="https://www.reddit.com/r/PPC/search/?q=CTV+campaign+completion+rate&sort=top"
           accent="var(--red)"
         >
           &ldquo;We spent $40K on a CTV interactive ad campaign. Completion rate was 12%. We had no idea
@@ -122,7 +122,7 @@ export default function CaseStudy() {
           stat="47%"
           label="of subscribers would cancel if ad load increases"
           source="Deloitte Digital Media Trends 2025"
-          url="https://www.deloitte.com/us/en/insights/industry/technology/digital-media-trends.html"
+          url="https://www2.deloitte.com/us/en/insights/industry/technology/digital-media-trends.html"
           accent="var(--amber)"
         >
           Yet platforms have no per-format fatigue scoring before deployment. Ad fatigue is
@@ -132,8 +132,8 @@ export default function CaseStudy() {
         <StatCard
           stat="0"
           label="pre-campaign fatigue tools exist publicly"
-          source="Marketing Brew · May 2025"
-          url="https://www.marketingbrew.com/stories/2025/05/06/upfronts-shoppable-ads"
+          source="Marketing Brew · Upfronts 2025 coverage"
+          url="https://www.marketingbrew.com/topics/advertising"
           accent="var(--text-2)"
         >
           &ldquo;The risk of annoying users is real when interactivity isn&apos;t intuitive.&rdquo; Despite
@@ -182,49 +182,51 @@ export default function CaseStudy() {
         className="rounded-xl overflow-hidden"
         style={{ background: "var(--surface)", border: "1px solid var(--border)" }}
       >
-        <table className="w-full text-sm px-5">
-          <TableHead cols={["Feature", "Reach", "Impact", "Confidence", "Effort", "Score"]} />
-          <tbody>
-            {[
-              { feature: "Engagement Decay Curve", reach: 1000, impact: 3, conf: 90, effort: 1, score: 2700, top: true },
-              { feature: "Fatigue Score Calculator", reach: 800, impact: 3, conf: 85, effort: 1, score: 2040 },
-              { feature: "Ad Format Simulator", reach: 1000, impact: 3, conf: 90, effort: 2, score: 1350 },
-              { feature: "Competitive Teardown", reach: 400, impact: 2, conf: 75, effort: 1, score: 600 },
-              { feature: "AI Format Recommendation", reach: 700, impact: 2, conf: 70, effort: 2, score: 490 },
-              { feature: "A/B Test Designer", reach: 600, impact: 2, conf: 80, effort: 2, score: 480 },
-            ].map((row) => (
-              <tr
-                key={row.feature}
-                style={{
-                  borderTop: "1px solid var(--border)",
-                  background: row.top ? "rgba(139,92,246,0.05)" : undefined,
-                }}
-              >
-                <td className="py-3 pr-4" style={{ color: row.top ? "var(--text)" : "var(--text-2)", fontWeight: row.top ? 500 : 400 }}>
-                  {row.feature}
-                  {row.top && (
-                    <span
-                      className="ml-2 text-xs px-1.5 py-0.5 rounded"
-                      style={{ background: "var(--accent-dim)", color: "var(--accent)" }}
-                    >
-                      #1
-                    </span>
-                  )}
-                </td>
-                <td className="py-3 px-3 text-center tabular-nums" style={{ color: "var(--text-3)" }}>{row.reach}</td>
-                <td className="py-3 px-3 text-center tabular-nums" style={{ color: "var(--text-3)" }}>{row.impact}</td>
-                <td className="py-3 px-3 text-center tabular-nums" style={{ color: "var(--text-3)" }}>{row.conf}%</td>
-                <td className="py-3 px-3 text-center tabular-nums" style={{ color: "var(--text-3)" }}>{row.effort}</td>
-                <td
-                  className="py-3 pl-3 text-center tabular-nums font-semibold"
-                  style={{ color: row.top ? "var(--accent)" : "var(--text-2)" }}
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm px-5" style={{ minWidth: "520px" }}>
+            <TableHead cols={["Feature", "Reach", "Impact", "Confidence", "Effort", "Score"]} />
+            <tbody>
+              {[
+                { feature: "Engagement Decay Curve", reach: 1000, impact: 3, conf: 90, effort: 1, score: 2700, top: true },
+                { feature: "Fatigue Score Calculator", reach: 800, impact: 3, conf: 85, effort: 1, score: 2040 },
+                { feature: "Ad Format Simulator", reach: 1000, impact: 3, conf: 90, effort: 2, score: 1350 },
+                { feature: "Competitive Teardown", reach: 400, impact: 2, conf: 75, effort: 1, score: 600 },
+                { feature: "AI Format Recommendation", reach: 700, impact: 2, conf: 70, effort: 2, score: 490 },
+                { feature: "A/B Test Designer", reach: 600, impact: 2, conf: 80, effort: 2, score: 480 },
+              ].map((row) => (
+                <tr
+                  key={row.feature}
+                  style={{
+                    borderTop: "1px solid var(--border)",
+                    background: row.top ? "rgba(124,106,245,0.05)" : undefined,
+                  }}
                 >
-                  {row.score}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+                  <td className="py-3 pr-4" style={{ color: row.top ? "var(--text)" : "var(--text-2)", fontWeight: row.top ? 500 : 400 }}>
+                    {row.feature}
+                    {row.top && (
+                      <span
+                        className="ml-2 text-xs px-1.5 py-0.5 rounded"
+                        style={{ background: "var(--accent-dim)", color: "var(--accent)" }}
+                      >
+                        #1
+                      </span>
+                    )}
+                  </td>
+                  <td className="py-3 px-3 text-center tabular-nums" style={{ color: "var(--text-3)" }}>{row.reach}</td>
+                  <td className="py-3 px-3 text-center tabular-nums" style={{ color: "var(--text-3)" }}>{row.impact}</td>
+                  <td className="py-3 px-3 text-center tabular-nums" style={{ color: "var(--text-3)" }}>{row.conf}%</td>
+                  <td className="py-3 px-3 text-center tabular-nums" style={{ color: "var(--text-3)" }}>{row.effort}</td>
+                  <td
+                    className="py-3 pl-3 text-center tabular-nums font-semibold"
+                    style={{ color: row.top ? "var(--accent)" : "var(--text-2)" }}
+                  >
+                    {row.score}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
         <div
           className="px-5 py-3 text-xs"
           style={{ borderTop: "1px solid var(--border)", color: "var(--text-3)" }}
@@ -241,42 +243,44 @@ export default function CaseStudy() {
         className="rounded-xl overflow-hidden"
         style={{ background: "var(--surface)", border: "1px solid var(--border)" }}
       >
-        <table className="w-full text-sm">
-          <TableHead cols={["Platform", "Format", "CTR avg", "Completion", "Notes"]} />
-          <tbody>
-            {[
-              { platform: "Roku", format: "Action Ads (shoppable)", ctr: "1.8–2.4%", comp: "76–82%", notes: "Deepest retail integration; QR + remote overlay; ~30% CPM premium", highlight: true },
-              { platform: "Amazon Fire TV", format: "Pause Ads + Interactive", ctr: "0.9–1.3%", comp: "90–95%", notes: "Non-intrusive; lowest fatigue; pause state only" },
-              { platform: "Peacock", format: "Choice Ads", ctr: "1.2–1.7%", comp: "80–86%", notes: "Two-option format; strong completion; proprietary data" },
-              { platform: "Samsung Ads", format: "ACR-targeted overlays", ctr: "1.0–1.5%", comp: "78–84%", notes: "Strongest 1st-party signal via Automated Content Recognition" },
-              { platform: "Standard CTV", format: "Pre-roll 30s (baseline)", ctr: "0.25–0.40%", comp: "74–80%", notes: "IAB benchmark baseline; lowest cost, lowest engagement" },
-            ].map((row) => (
-              <tr
-                key={row.platform}
-                style={{
-                  borderTop: "1px solid var(--border)",
-                  background: row.highlight ? "rgba(139,92,246,0.05)" : undefined,
-                }}
-              >
-                <td className="py-3 pr-4 font-medium" style={{ color: row.highlight ? "var(--accent)" : "var(--text)" }}>
-                  {row.platform}
-                  {row.highlight && (
-                    <span
-                      className="ml-2 text-xs px-1.5 py-0.5 rounded"
-                      style={{ background: "var(--accent-dim)", color: "var(--accent)" }}
-                    >
-                      highest CTR
-                    </span>
-                  )}
-                </td>
-                <td className="py-3 px-3" style={{ color: "var(--text-2)" }}>{row.format}</td>
-                <td className="py-3 px-3 text-center tabular-nums font-medium" style={{ color: row.highlight ? "var(--accent)" : "var(--text-2)" }}>{row.ctr}</td>
-                <td className="py-3 px-3 text-center tabular-nums" style={{ color: "var(--text-2)" }}>{row.comp}</td>
-                <td className="py-3 pl-3 text-xs" style={{ color: "var(--text-3)" }}>{row.notes}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm" style={{ minWidth: "640px" }}>
+            <TableHead cols={["Platform", "Format", "CTR avg", "Completion", "Notes"]} />
+            <tbody>
+              {[
+                { platform: "Roku", format: "Action Ads (shoppable)", ctr: "1.8–2.4%", comp: "76–82%", notes: "Deepest retail integration; QR + remote overlay; ~30% CPM premium", highlight: true },
+                { platform: "Amazon Fire TV", format: "Pause Ads + Interactive", ctr: "0.9–1.3%", comp: "90–95%", notes: "Non-intrusive; lowest fatigue; pause state only" },
+                { platform: "Peacock", format: "Choice Ads", ctr: "1.2–1.7%", comp: "80–86%", notes: "Two-option format; strong completion; proprietary data" },
+                { platform: "Samsung Ads", format: "ACR-targeted overlays", ctr: "1.0–1.5%", comp: "78–84%", notes: "Strongest 1st-party signal via Automated Content Recognition" },
+                { platform: "Standard CTV", format: "Pre-roll 30s (baseline)", ctr: "0.25–0.40%", comp: "74–80%", notes: "IAB benchmark baseline; lowest cost, lowest engagement" },
+              ].map((row) => (
+                <tr
+                  key={row.platform}
+                  style={{
+                    borderTop: "1px solid var(--border)",
+                    background: row.highlight ? "rgba(124,106,245,0.05)" : undefined,
+                  }}
+                >
+                  <td className="py-3 pr-4 font-medium whitespace-nowrap" style={{ color: row.highlight ? "var(--accent)" : "var(--text)" }}>
+                    {row.platform}
+                    {row.highlight && (
+                      <span
+                        className="ml-2 text-xs px-1.5 py-0.5 rounded"
+                        style={{ background: "var(--accent-dim)", color: "var(--accent)" }}
+                      >
+                        highest CTR
+                      </span>
+                    )}
+                  </td>
+                  <td className="py-3 px-3 whitespace-nowrap" style={{ color: "var(--text-2)" }}>{row.format}</td>
+                  <td className="py-3 px-3 text-center tabular-nums font-medium whitespace-nowrap" style={{ color: row.highlight ? "var(--accent)" : "var(--text-2)" }}>{row.ctr}</td>
+                  <td className="py-3 px-3 text-center tabular-nums whitespace-nowrap" style={{ color: "var(--text-2)" }}>{row.comp}</td>
+                  <td className="py-3 pl-3 text-xs" style={{ color: "var(--text-2)" }}>{row.notes}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
         <div
           className="px-5 py-3 text-xs"
           style={{ borderTop: "1px solid var(--border)", color: "var(--text-3)" }}

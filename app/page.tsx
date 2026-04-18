@@ -205,7 +205,48 @@ export default function Home() {
       </div>
 
       {/* ── Content ── */}
-      <main className="flex-1 max-w-5xl mx-auto w-full px-6 py-8 pb-20">
+      <main className="flex-1 max-w-5xl mx-auto w-full px-6 pb-20">
+
+        {/* Tab context strip */}
+        {activeTab === "simulator" && (
+          <div
+            className="flex items-start gap-3 px-4 py-3 my-6 rounded-lg text-sm"
+            style={{ background: "var(--surface)", border: "1px solid var(--border)" }}
+          >
+            <span style={{ color: "var(--accent)", fontSize: "1rem", lineHeight: 1.4 }}>①</span>
+            <span style={{ color: "var(--text-2)" }}>
+              <span style={{ color: "var(--text)", fontWeight: 500 }}>Choose a format and category on the left.</span>
+              {" "}The chart updates live — watch how attention drops over time, and check the CTR and completion rate predictions at the top. When you&apos;re ready, hit <strong style={{ color: "var(--text)" }}>Generate</strong> for an AI recommendation.
+            </span>
+          </div>
+        )}
+
+        {activeTab === "case-study" && (
+          <div
+            className="flex items-start gap-3 px-4 py-3 my-6 rounded-lg text-sm"
+            style={{ background: "var(--surface)", border: "1px solid var(--border)" }}
+          >
+            <span style={{ color: "var(--accent)", fontSize: "1rem", lineHeight: 1.4 }}>②</span>
+            <span style={{ color: "var(--text-2)" }}>
+              <span style={{ color: "var(--text)", fontWeight: 500 }}>The PM thinking behind AdSignal.</span>
+              {" "}The problem statement, market research, feature prioritization (RICE), competitive teardown, and success metrics.
+            </span>
+          </div>
+        )}
+
+        {activeTab === "ab-test" && (
+          <div
+            className="flex items-start gap-3 px-4 py-3 my-6 rounded-lg text-sm"
+            style={{ background: "var(--surface)", border: "1px solid var(--border)" }}
+          >
+            <span style={{ color: "var(--accent)", fontSize: "1rem", lineHeight: 1.4 }}>③</span>
+            <span style={{ color: "var(--text-2)" }}>
+              <span style={{ color: "var(--text)", fontWeight: 500 }}>Design a statistically valid A/B test before committing budget.</span>
+              {" "}Set your baseline metric, the lift you need to detect, and your traffic — the calculator tells you how long the test needs to run.
+            </span>
+          </div>
+        )}
+
         {activeTab === "simulator" && <FormatSimulator />}
         {activeTab === "case-study" && <CaseStudy />}
         {activeTab === "ab-test" && <ABTestDesigner />}
