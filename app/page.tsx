@@ -3,6 +3,24 @@
 import { useState } from "react";
 import dynamic from "next/dynamic";
 
+const TheBrief = dynamic(() => import("@/components/TheBrief"), {
+  ssr: false,
+  loading: () => (
+    <div className="h-64 flex items-center justify-center text-sm" style={{ color: "var(--text-3)" }}>
+      Loading…
+    </div>
+  ),
+});
+
+const FormatSpec = dynamic(() => import("@/components/FormatSpec"), {
+  ssr: false,
+  loading: () => (
+    <div className="h-64 flex items-center justify-center text-sm" style={{ color: "var(--text-3)" }}>
+      Loading…
+    </div>
+  ),
+});
+
 const FormatSimulator = dynamic(() => import("@/components/FormatSimulator"), {
   ssr: false,
   loading: () => (
@@ -32,22 +50,34 @@ const ABTestDesigner = dynamic(() => import("@/components/ABTestDesigner"), {
 
 const TABS = [
   {
-    id: "case-study",
-    label: "The Problem",
+    id: "brief",
+    label: "The Brief",
     step: "01",
-    hint: "Why this exists",
+    description: "PRD — problem, user stories, acceptance criteria, rollout",
+  },
+  {
+    id: "format-spec",
+    label: "Format Spec",
+    step: "02",
+    description: "UX states, interactions, device behavior — the engineering handoff",
   },
   {
     id: "simulator",
     label: "Simulate",
-    step: "02",
-    hint: "Try the tool",
+    step: "03",
+    description: "Live prototype — engagement decay, CTR, fatigue score",
   },
   {
-    id: "ab-test",
-    label: "Run a Test",
-    step: "03",
-    hint: "Design an experiment",
+    id: "research",
+    label: "Research",
+    step: "04",
+    description: "Market data, competitive teardown, RICE prioritization",
+  },
+  {
+    id: "measure",
+    label: "Measure",
+    step: "05",
+    description: "A/B test design — sample size, duration, statistical power",
   },
 ] as const;
 
@@ -64,18 +94,9 @@ function LogoMark() {
   );
 }
 
-function NextStepButton({
-  label,
-  onClick,
-}: {
-  label: string;
-  onClick: () => void;
-}) {
+function NextStepButton({ label, onClick }: { label: string; onClick: () => void }) {
   return (
-    <div
-      className="mt-12 pt-8 flex justify-end"
-      style={{ borderTop: "1px solid var(--border)" }}
-    >
+    <div className="mt-12 pt-8 flex justify-end" style={{ borderTop: "1px solid var(--border)" }}>
       <button
         onClick={onClick}
         className="flex items-center gap-2 text-sm px-4 py-2 rounded-lg transition-all"
@@ -104,10 +125,11 @@ function NextStepButton({
 }
 
 export default function Home() {
-  const [activeTab, setActiveTab] = useState<TabId>("case-study");
+  const [activeTab, setActiveTab] = useState<TabId>("brief");
 
   const currentIndex = TABS.findIndex((t) => t.id === activeTab);
   const nextTab = TABS[currentIndex + 1];
+  const activeTabData = TABS[currentIndex];
 
   return (
     <div className="min-h-screen flex flex-col" style={{ background: "var(--bg)" }}>
@@ -117,7 +139,6 @@ export default function Home() {
         <div className="max-w-5xl mx-auto px-6">
           <div className="flex items-center h-[52px] gap-5">
 
-            {/* Wordmark */}
             <a href="/" className="flex items-center gap-2.5 shrink-0 no-underline">
               <div
                 className="w-7 h-7 rounded-md flex items-center justify-center shrink-0"
@@ -133,32 +154,27 @@ export default function Home() {
               </span>
             </a>
 
-            {/* Divider */}
             <div className="h-4 w-px shrink-0" style={{ background: "var(--border-2)" }} />
 
-            {/* Tabs */}
-            <nav className="flex items-center gap-0.5 flex-1" role="tablist">
+            <nav className="flex items-center gap-0.5 flex-1 overflow-x-auto" role="tablist">
               {TABS.map((tab) => (
                 <button
                   key={tab.id}
                   role="tab"
                   aria-selected={activeTab === tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className="px-3 py-1.5 rounded-md text-sm transition-all"
+                  className="px-3 py-1.5 rounded-md text-sm transition-all whitespace-nowrap shrink-0"
                   style={{
                     color: activeTab === tab.id ? "var(--text)" : "var(--text-2)",
                     background: activeTab === tab.id ? "var(--surface-2)" : "transparent",
                     fontWeight: activeTab === tab.id ? 600 : 400,
-                    border: activeTab === tab.id
-                      ? "1px solid var(--border-2)"
-                      : "1px solid transparent",
+                    border: activeTab === tab.id ? "1px solid var(--border-2)" : "1px solid transparent",
+                    fontFamily: "inherit",
                   }}
                 >
                   <span
                     className="mr-1.5 text-xs tabular-nums"
-                    style={{
-                      color: activeTab === tab.id ? "var(--accent)" : "var(--text-3)",
-                    }}
+                    style={{ color: activeTab === tab.id ? "var(--accent)" : "var(--text-3)" }}
                   >
                     {tab.step}
                   </span>
@@ -167,7 +183,6 @@ export default function Home() {
               ))}
             </nav>
 
-            {/* GitHub */}
             <a
               href="https://github.com/AliHasan-786/AdSignal"
               target="_blank"
@@ -188,133 +203,95 @@ export default function Home() {
 
       {/* ── Hero ── */}
       <div style={{ borderBottom: "1px solid var(--border)", background: "var(--surface)" }}>
-        <div className="max-w-5xl mx-auto px-6 py-10">
+        <div className="max-w-5xl mx-auto px-6 py-8">
 
-          <p
-            className="text-xs font-semibold uppercase tracking-widest mb-3"
-            style={{ color: "var(--accent)" }}
-          >
-            CTV Ad Format Intelligence
-          </p>
-          <h1
-            className="font-extrabold leading-tight mb-3"
-            style={{ fontSize: "2.25rem", letterSpacing: "-0.04em", color: "var(--text)" }}
-          >
-            Know before you spend.
-          </h1>
-          <p
-            className="text-base leading-relaxed mb-8"
-            style={{ color: "var(--text-2)", maxWidth: "52ch" }}
-          >
-            CTV advertisers commit real budget to ad formats with no way to predict performance
-            before launch. AdSignal simulates engagement decay, CTR, completion rate, and fatigue
-            risk — so you can optimize format selection before the campaign goes live.
-          </p>
-
-          {/* 3-step story flow */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-0 rounded-xl overflow-hidden"
-            style={{ border: "1px solid var(--border)" }}>
-            {[
-              {
-                step: "01",
-                tab: "case-study" as TabId,
-                title: "Understand the problem",
-                body: "IAB and Deloitte data show CTV advertisers are flying blind — no pre-campaign format prediction tools exist.",
-                cta: "Read the case →",
-              },
-              {
-                step: "02",
-                tab: "simulator" as TabId,
-                title: "Simulate your format",
-                body: "Configure format type, ad length, and frequency. See predicted CTR, completion rate, and engagement decay update live.",
-                cta: "Try the simulator →",
-              },
-              {
-                step: "03",
-                tab: "ab-test" as TabId,
-                title: "Design a valid test",
-                body: "Once you've picked a format, calculate the sample size and test duration you need for a statistically rigorous result.",
-                cta: "Build the test →",
-              },
-            ].map((s, i) => (
-              <button
-                key={s.step}
-                onClick={() => setActiveTab(s.tab)}
-                className="text-left p-5 transition-colors"
-                style={{
-                  background: activeTab === s.tab ? "var(--surface-2)" : "var(--surface)",
-                  borderLeft: i > 0 ? "1px solid var(--border)" : undefined,
-                  borderBottom: "none",
-                  fontFamily: "inherit",
-                  cursor: "pointer",
-                }}
-                onMouseEnter={(e) => {
-                  if (activeTab !== s.tab) e.currentTarget.style.background = "var(--surface-2)";
-                }}
-                onMouseLeave={(e) => {
-                  if (activeTab !== s.tab) e.currentTarget.style.background = "var(--surface)";
-                }}
+          <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-6">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: "var(--accent)" }}>
+                APM Portfolio · Ad Experiences
+              </p>
+              <h1
+                className="font-extrabold leading-tight mb-2"
+                style={{ fontSize: "1.875rem", letterSpacing: "-0.035em", color: "var(--text)" }}
               >
-                <p
-                  className="text-xs font-semibold tabular-nums mb-2"
-                  style={{ color: activeTab === s.tab ? "var(--accent)" : "var(--text-3)" }}
+                ShopPause — Shoppable Pause Ad
+              </h1>
+              <p className="text-sm leading-relaxed" style={{ color: "var(--text-2)", maxWidth: "52ch" }}>
+                A product concept for Roku&apos;s OneView Ad Manager: a non-intrusive shoppable overlay triggered by viewer pause intent. Full PM artifact — PRD, UX spec, prototype, research, and measurement plan.
+              </p>
+            </div>
+
+            {/* Step progress */}
+            <div
+              className="flex flex-col gap-1 shrink-0 rounded-xl p-4"
+              style={{ background: "var(--surface-2)", border: "1px solid var(--border-2)", minWidth: "220px" }}
+            >
+              {TABS.map((tab) => (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className="flex items-center gap-2.5 text-left w-full px-2 py-1.5 rounded-lg transition-colors"
+                  style={{
+                    background: activeTab === tab.id ? "var(--accent-dim)" : "transparent",
+                    fontFamily: "inherit",
+                  }}
                 >
-                  {s.step}
-                </p>
-                <p className="text-sm font-semibold mb-1.5" style={{ color: "var(--text)" }}>
-                  {s.title}
-                </p>
-                <p className="text-xs leading-relaxed mb-3" style={{ color: "var(--text-2)" }}>
-                  {s.body}
-                </p>
-                <p
-                  className="text-xs font-medium"
-                  style={{ color: activeTab === s.tab ? "var(--accent)" : "var(--text-3)" }}
-                >
-                  {s.cta}
-                </p>
-              </button>
-            ))}
+                  <span
+                    className="text-xs tabular-nums font-semibold shrink-0"
+                    style={{ color: activeTab === tab.id ? "var(--accent)" : "var(--text-3)", minWidth: "18px" }}
+                  >
+                    {tab.step}
+                  </span>
+                  <span
+                    className="text-xs font-medium"
+                    style={{ color: activeTab === tab.id ? "var(--text)" : "var(--text-3)" }}
+                  >
+                    {tab.label}
+                  </span>
+                </button>
+              ))}
+            </div>
           </div>
 
-          {/* Source bar */}
-          <div
-            className="flex items-center gap-2 mt-6 pt-5"
-            style={{ borderTop: "1px solid var(--border)" }}
-          >
-            <span className="text-xs font-medium" style={{ color: "var(--text-3)" }}>
-              Data sources:
-            </span>
-            {[
-              "IAB CTV Benchmarks 2024",
-              "Deloitte Digital Media Trends 2025",
-              "Roku Shoptalk 2025",
-              "Marketing Brew May 2025",
-            ].map((s) => (
+          {/* Active tab context */}
+          {activeTabData && (
+            <div
+              className="mt-5 pt-4 flex items-center gap-2"
+              style={{ borderTop: "1px solid var(--border)" }}
+            >
               <span
-                key={s}
-                className="text-xs px-2 py-0.5 rounded"
-                style={{
-                  background: "var(--surface-3)",
-                  color: "var(--text-3)",
-                  border: "1px solid var(--border)",
-                }}
+                className="text-xs font-semibold tabular-nums px-2 py-0.5 rounded"
+                style={{ background: "var(--accent-dim)", color: "var(--accent)" }}
               >
-                {s}
+                {activeTabData.step}
               </span>
-            ))}
-          </div>
+              <span className="text-xs" style={{ color: "var(--text-3)" }}>
+                {activeTabData.description}
+              </span>
+            </div>
+          )}
         </div>
       </div>
 
       {/* ── Content ── */}
       <main className="flex-1 max-w-5xl mx-auto w-full px-6 pt-8 pb-20">
-        {activeTab === "case-study" && (
+        {activeTab === "brief" && (
           <>
-            <CaseStudy />
+            <TheBrief />
             {nextTab && (
               <NextStepButton
-                label={`Next: ${nextTab.label} — ${nextTab.hint}`}
+                label={`Next: ${nextTab.step} ${nextTab.label} — ${nextTab.description}`}
+                onClick={() => setActiveTab(nextTab.id)}
+              />
+            )}
+          </>
+        )}
+        {activeTab === "format-spec" && (
+          <>
+            <FormatSpec />
+            {nextTab && (
+              <NextStepButton
+                label={`Next: ${nextTab.step} ${nextTab.label} — ${nextTab.description}`}
                 onClick={() => setActiveTab(nextTab.id)}
               />
             )}
@@ -325,13 +302,24 @@ export default function Home() {
             <FormatSimulator />
             {nextTab && (
               <NextStepButton
-                label={`Next: ${nextTab.label} — ${nextTab.hint}`}
+                label={`Next: ${nextTab.step} ${nextTab.label} — ${nextTab.description}`}
                 onClick={() => setActiveTab(nextTab.id)}
               />
             )}
           </>
         )}
-        {activeTab === "ab-test" && <ABTestDesigner />}
+        {activeTab === "research" && (
+          <>
+            <CaseStudy />
+            {nextTab && (
+              <NextStepButton
+                label={`Next: ${nextTab.step} ${nextTab.label} — ${nextTab.description}`}
+                onClick={() => setActiveTab(nextTab.id)}
+              />
+            )}
+          </>
+        )}
+        {activeTab === "measure" && <ABTestDesigner />}
       </main>
 
       {/* ── Footer ── */}
@@ -343,7 +331,7 @@ export default function Home() {
               href="https://github.com/AliHasan-786"
               target="_blank"
               rel="noopener noreferrer"
-              className="underline underline-offset-2 transition-colors"
+              className="underline underline-offset-2"
               style={{ color: "var(--text-2)" }}
             >
               Ali Hasan
