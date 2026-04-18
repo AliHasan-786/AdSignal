@@ -423,6 +423,7 @@ export default function ABTestDesigner() {
                   axisLine={{ stroke: "#1E1340" }}
                 />
                 <YAxis
+                  domain={[0, (dataMax: number) => Math.ceil(dataMax * 1.3 * 10) / 10]}
                   tick={{ fill: "#5B4F7A", fontSize: 11 }}
                   tickLine={false}
                   axisLine={{ stroke: "#1E1340" }}
@@ -483,7 +484,7 @@ export default function ABTestDesigner() {
                 ["Randomization unit", "Device ID (household-level)"],
                 ["Guard rail metric", "Ad completion rate — must not decrease"],
                 ["Significance threshold", `α = ${config.alpha} (${Math.round((1 - config.alpha) * 100)}% confidence)`],
-                ["Statistical power", `${Math.round(config.power * 100)}% (β = ${1 - config.power})`],
+                ["Statistical power", `${Math.round(config.power * 100)}% (β = ${(1 - config.power).toFixed(2)})`],
                 ["Test type", "Two-tailed — detecting both lifts and drops"],
               ].map(([key, val]) => (
                 <div key={key} className="flex gap-3">
