@@ -2,10 +2,7 @@
 
 function SectionTitle({ children }: { children: React.ReactNode }) {
   return (
-    <h2
-      className="text-base font-semibold mb-5"
-      style={{ color: "var(--text)" }}
-    >
+    <h2 className="text-base font-semibold mb-5" style={{ color: "var(--text)" }}>
       {children}
     </h2>
   );
@@ -35,10 +32,7 @@ function StatCard({
       className="rounded-xl overflow-hidden"
       style={{ background: "var(--surface)", border: "1px solid var(--border)" }}
     >
-      <div
-        className="px-5 py-4"
-        style={{ borderBottom: "1px solid var(--border)" }}
-      >
+      <div className="px-5 py-4" style={{ borderBottom: "1px solid var(--border)" }}>
         <div className="flex items-baseline gap-2.5 mb-1">
           <span
             className="font-bold tabular-nums leading-none"
@@ -46,10 +40,7 @@ function StatCard({
           >
             {stat}
           </span>
-          <span
-            className="text-xs font-medium uppercase tracking-wide"
-            style={{ color: "var(--text-3)" }}
-          >
+          <span className="text-xs font-medium uppercase tracking-wide" style={{ color: "var(--text-3)" }}>
             {label}
           </span>
         </div>
@@ -81,7 +72,7 @@ function TableHead({ cols }: { cols: string[] }) {
         {cols.map((c) => (
           <th
             key={c}
-            className="text-left pb-2 pr-4 text-xs font-medium whitespace-nowrap"
+            className="text-left py-3 px-4 text-xs font-medium whitespace-nowrap"
             style={{ color: "var(--text-3)" }}
           >
             {c}
@@ -96,72 +87,69 @@ export default function CaseStudy() {
   return (
     <div className="max-w-2xl space-y-0">
 
+      {/* Framing */}
+      <div
+        className="rounded-xl p-5 mb-8"
+        style={{ background: "var(--accent-dim)", border: "1px solid rgba(124,106,245,0.2)" }}
+      >
+        <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: "var(--accent)" }}>
+          What this is
+        </p>
+        <p className="text-sm leading-relaxed" style={{ color: "var(--text-2)" }}>
+          AdSignal is a <span style={{ color: "var(--text)", fontWeight: 500 }}>product concept for Roku&apos;s OneView Ad Manager</span> — a Campaign Preview feature that would let advertisers simulate format performance before committing budget. This prototype validates the concept and demonstrates the PM thinking behind it: problem discovery, market research, feature prioritization, and success metrics.
+        </p>
+      </div>
+
       {/* Problem */}
       <SectionTitle>Problem statement</SectionTitle>
       <p className="text-sm leading-relaxed mb-6" style={{ color: "var(--text-2)" }}>
-        CTV advertisers commit five- and six-figure budgets to interactive ad formats without a
-        reliable pre-campaign tool to predict engagement, completion rate, or ad fatigue risk.
-        The result: wasted spend, damaged viewer experience, and missed opportunities to shift
-        budget toward higher-performing formats before launch.
+        Advertisers buying CTV formats on Roku&apos;s OneView platform have no way to predict how a format will perform before launch. They select from a menu of formats — Standard 30s, Action Ads, Choice Ads — with only historical platform averages to guide them. There&apos;s no preview of engagement decay, no fatigue risk scoring by category, and no pre-campaign CTR estimate. The result is wasted spend, damaged viewer experience, and eroded advertiser trust in the platform.
       </p>
 
       <div className="space-y-3">
         <StatCard
           stat="$40K"
-          label="wasted without pre-campaign prediction"
-          source="r/PPC — CTV campaign post-mortem thread"
-          url="https://www.reddit.com/r/PPC/search/?q=CTV+campaign+completion+rate&sort=top"
+          label="wasted — no pre-campaign format prediction"
+          source="r/PPC community — representative advertiser account"
+          url="https://www.reddit.com/r/PPC/"
           accent="var(--red)"
         >
-          &ldquo;We spent $40K on a CTV interactive ad campaign. Completion rate was 12%. We had no idea
-          what to expect before launch. The platform gives you historical averages but nothing
-          specific to your format or category.&rdquo;
+          &ldquo;We spent $40K on a CTV interactive ad campaign. Completion rate was 12%. We had no idea what to expect before launch. The platform gives you historical averages but nothing specific to your format or category.&rdquo; — CTV advertiser, r/PPC
         </StatCard>
 
         <StatCard
           stat="47%"
-          label="of subscribers would cancel if ad load increases"
+          label="of streaming subscribers would cancel if ad load increases"
           source="Deloitte Digital Media Trends 2025"
           url="https://www2.deloitte.com/us/en/insights/industry/technology/digital-media-trends.html"
           accent="var(--amber)"
         >
-          Yet platforms have no per-format fatigue scoring before deployment. Ad fatigue is
-          measured post-campaign via completion rates and churn signals — never before.
+          Ad fatigue is a platform-level risk for Roku, not just an advertiser problem. Over-frequency or low-quality format selection harms viewer retention — but Roku has no tool that helps advertisers make better choices before campaigns go live.
         </StatCard>
 
         <StatCard
           stat="0"
-          label="pre-campaign fatigue tools exist publicly"
-          source="Marketing Brew · Upfronts 2025 coverage"
-          url="https://www.marketingbrew.com/topics/advertising"
+          label="pre-campaign format preview tools in Roku's Ad Manager"
+          source="Marketing Brew — CTV advertising coverage"
+          url="https://www.marketingbrew.com/topics/video"
           accent="var(--text-2)"
         >
-          &ldquo;The risk of annoying users is real when interactivity isn&apos;t intuitive.&rdquo; Despite
-          industry interest in shoppable ads, the tech still has a long way to go before it
-          becomes second nature for consumers.
+          &ldquo;The risk of annoying users is real when interactivity isn&apos;t intuitive.&rdquo; Shoppable and interactive formats are Roku&apos;s highest-CPM inventory — but without a preview mechanism, advertisers can&apos;t confidently commit to premium formats.
         </StatCard>
       </div>
 
       <Divider />
 
-      {/* Research */}
-      <SectionTitle>Market research synthesis</SectionTitle>
-
+      {/* Opportunity */}
+      <SectionTitle>The product opportunity</SectionTitle>
       <div className="space-y-4 text-sm leading-relaxed" style={{ color: "var(--text-2)" }}>
         <p>
-          <span style={{ color: "var(--text)", fontWeight: 500 }}>Why this hasn&apos;t been solved: </span>
-          CTV platforms benefit from opacity — advertisers buying without clear format preview
-          drives higher CPMs on new interactive formats. Measurement lag compounds the problem:
-          no pre-campaign fatigue modeling tool has existed publicly.
-        </p>
-        <p>
-          <span style={{ color: "var(--text)", fontWeight: 500 }}>IAB State of Data 2025: </span>
-          &ldquo;The #1 request from CTV advertisers is better pre-campaign predictive modeling.
-          Current benchmarks are not granular enough to guide format selection decisions.&rdquo;
+          <span style={{ color: "var(--text)", fontWeight: 500 }}>Why Roku is uniquely positioned to build this: </span>
+          Roku has ACR data across 100M+ households, format-level performance data from thousands of campaigns, and category-specific engagement signals that no third party has access to. A Campaign Preview feature powered by this data would be dramatically more accurate than IAB averages — and would be a meaningful differentiator for OneView against Amazon Ads and Peacock.
         </p>
         <p>
           <span style={{ color: "var(--text)", fontWeight: 500 }}>Roku VP of Advertising, Shoptalk 2025: </span>
-          &ldquo;We need to meet the consumer where they&apos;re at in terms of how they want to interact.&rdquo;{" "}
+          &ldquo;We need to meet the consumer where they&apos;re at in terms of how they want to interact.&rdquo; Format selection is where that starts — and right now advertisers are guessing.{" "}
           <a
             href="https://advertising.roku.com/learn/resources/retail-meets-the-remote-rokus-takeaways-from-shoptalk-2025"
             target="_blank"
@@ -172,27 +160,34 @@ export default function CaseStudy() {
             Source ↗
           </a>
         </p>
+        <p>
+          <span style={{ color: "var(--text)", fontWeight: 500 }}>The PM angle: </span>
+          This is an advertiser-facing product problem that sits at the intersection of Roku&apos;s three core interests — growing ad revenue, protecting viewer experience, and increasing advertiser confidence in premium format inventory. An APM on Ad Experiences would own this feature end-to-end: from discovery through spec, launch, and iteration.
+        </p>
       </div>
 
       <Divider />
 
       {/* RICE */}
       <SectionTitle>Feature prioritization — RICE</SectionTitle>
+      <p className="text-sm leading-relaxed mb-5" style={{ color: "var(--text-2)" }}>
+        If Roku were to build Campaign Preview into OneView, these are the features I&apos;d prioritize for v1 and v2, scored by RICE.
+      </p>
       <div
         className="rounded-xl overflow-hidden"
         style={{ background: "var(--surface)", border: "1px solid var(--border)" }}
       >
         <div className="overflow-x-auto">
-          <table className="w-full text-sm px-5" style={{ minWidth: "520px" }}>
+          <table style={{ width: "100%", minWidth: "520px", borderCollapse: "collapse" }}>
             <TableHead cols={["Feature", "Reach", "Impact", "Confidence", "Effort", "Score"]} />
             <tbody>
               {[
-                { feature: "Engagement Decay Curve", reach: 1000, impact: 3, conf: 90, effort: 1, score: 2700, top: true },
-                { feature: "Fatigue Score Calculator", reach: 800, impact: 3, conf: 85, effort: 1, score: 2040 },
-                { feature: "Ad Format Simulator", reach: 1000, impact: 3, conf: 90, effort: 2, score: 1350 },
-                { feature: "Competitive Teardown", reach: 400, impact: 2, conf: 75, effort: 1, score: 600 },
-                { feature: "AI Format Recommendation", reach: 700, impact: 2, conf: 70, effort: 2, score: 490 },
-                { feature: "A/B Test Designer", reach: 600, impact: 2, conf: 80, effort: 2, score: 480 },
+                { feature: "Engagement decay preview", reach: 1000, impact: 3, conf: 90, effort: 1, score: 2700, top: true },
+                { feature: "Fatigue risk score by category", reach: 800, impact: 3, conf: 85, effort: 1, score: 2040 },
+                { feature: "Format comparison simulator", reach: 1000, impact: 3, conf: 90, effort: 2, score: 1350 },
+                { feature: "Competitive format benchmarks", reach: 400, impact: 2, conf: 75, effort: 1, score: 600 },
+                { feature: "AI format recommendation", reach: 700, impact: 2, conf: 70, effort: 2, score: 490 },
+                { feature: "A/B test design assistant", reach: 600, impact: 2, conf: 80, effort: 2, score: 480 },
               ].map((row) => (
                 <tr
                   key={row.feature}
@@ -201,25 +196,22 @@ export default function CaseStudy() {
                     background: row.top ? "rgba(124,106,245,0.05)" : undefined,
                   }}
                 >
-                  <td className="py-3 pr-4" style={{ color: row.top ? "var(--text)" : "var(--text-2)", fontWeight: row.top ? 500 : 400 }}>
+                  <td className="py-3 px-4" style={{ color: row.top ? "var(--text)" : "var(--text-2)", fontWeight: row.top ? 500 : 400 }}>
                     {row.feature}
                     {row.top && (
                       <span
                         className="ml-2 text-xs px-1.5 py-0.5 rounded"
                         style={{ background: "var(--accent-dim)", color: "var(--accent)" }}
                       >
-                        #1
+                        v1 priority
                       </span>
                     )}
                   </td>
-                  <td className="py-3 px-3 text-center tabular-nums" style={{ color: "var(--text-3)" }}>{row.reach}</td>
-                  <td className="py-3 px-3 text-center tabular-nums" style={{ color: "var(--text-3)" }}>{row.impact}</td>
-                  <td className="py-3 px-3 text-center tabular-nums" style={{ color: "var(--text-3)" }}>{row.conf}%</td>
-                  <td className="py-3 px-3 text-center tabular-nums" style={{ color: "var(--text-3)" }}>{row.effort}</td>
-                  <td
-                    className="py-3 pl-3 text-center tabular-nums font-semibold"
-                    style={{ color: row.top ? "var(--accent)" : "var(--text-2)" }}
-                  >
+                  <td className="py-3 px-4 text-center tabular-nums" style={{ color: "var(--text-3)" }}>{row.reach}</td>
+                  <td className="py-3 px-4 text-center tabular-nums" style={{ color: "var(--text-3)" }}>{row.impact}</td>
+                  <td className="py-3 px-4 text-center tabular-nums" style={{ color: "var(--text-3)" }}>{row.conf}%</td>
+                  <td className="py-3 px-4 text-center tabular-nums" style={{ color: "var(--text-3)" }}>{row.effort}</td>
+                  <td className="py-3 px-4 text-center tabular-nums font-semibold" style={{ color: row.top ? "var(--accent)" : "var(--text-2)" }}>
                     {row.score}
                   </td>
                 </tr>
@@ -227,11 +219,8 @@ export default function CaseStudy() {
             </tbody>
           </table>
         </div>
-        <div
-          className="px-5 py-3 text-xs"
-          style={{ borderTop: "1px solid var(--border)", color: "var(--text-3)" }}
-        >
-          Score = (Reach × Impact × Confidence%) ÷ Effort
+        <div className="px-4 py-3 text-xs" style={{ borderTop: "1px solid var(--border)", color: "var(--text-3)" }}>
+          Score = (Reach × Impact × Confidence%) ÷ Effort · Reach = estimated monthly active advertisers affected
         </div>
       </div>
 
@@ -239,12 +228,15 @@ export default function CaseStudy() {
 
       {/* Competitive teardown */}
       <SectionTitle>Competitive teardown — interactive CTV formats</SectionTitle>
+      <p className="text-sm leading-relaxed mb-5" style={{ color: "var(--text-2)" }}>
+        Roku&apos;s Action Ads lead on CTR. The gap vs. Standard CTV is the core advertiser value proposition — but only if advertisers can confidently select the right format.
+      </p>
       <div
         className="rounded-xl overflow-hidden"
         style={{ background: "var(--surface)", border: "1px solid var(--border)" }}
       >
         <div className="overflow-x-auto">
-          <table className="w-full text-sm" style={{ minWidth: "640px" }}>
+          <table style={{ width: "100%", minWidth: "600px", borderCollapse: "collapse" }}>
             <TableHead cols={["Platform", "Format", "CTR avg", "Completion", "Notes"]} />
             <tbody>
               {[
@@ -261,30 +253,24 @@ export default function CaseStudy() {
                     background: row.highlight ? "rgba(124,106,245,0.05)" : undefined,
                   }}
                 >
-                  <td className="py-3 pr-4 font-medium whitespace-nowrap" style={{ color: row.highlight ? "var(--accent)" : "var(--text)" }}>
+                  <td className="py-3 px-4 font-medium whitespace-nowrap" style={{ color: row.highlight ? "var(--accent)" : "var(--text)" }}>
                     {row.platform}
                     {row.highlight && (
-                      <span
-                        className="ml-2 text-xs px-1.5 py-0.5 rounded"
-                        style={{ background: "var(--accent-dim)", color: "var(--accent)" }}
-                      >
+                      <span className="ml-2 text-xs px-1.5 py-0.5 rounded" style={{ background: "var(--accent-dim)", color: "var(--accent)" }}>
                         highest CTR
                       </span>
                     )}
                   </td>
-                  <td className="py-3 px-3 whitespace-nowrap" style={{ color: "var(--text-2)" }}>{row.format}</td>
-                  <td className="py-3 px-3 text-center tabular-nums font-medium whitespace-nowrap" style={{ color: row.highlight ? "var(--accent)" : "var(--text-2)" }}>{row.ctr}</td>
-                  <td className="py-3 px-3 text-center tabular-nums whitespace-nowrap" style={{ color: "var(--text-2)" }}>{row.comp}</td>
-                  <td className="py-3 pl-3 text-xs" style={{ color: "var(--text-2)" }}>{row.notes}</td>
+                  <td className="py-3 px-4 whitespace-nowrap" style={{ color: "var(--text-2)" }}>{row.format}</td>
+                  <td className="py-3 px-4 text-center tabular-nums font-medium whitespace-nowrap" style={{ color: row.highlight ? "var(--accent)" : "var(--text-2)" }}>{row.ctr}</td>
+                  <td className="py-3 px-4 text-center tabular-nums whitespace-nowrap" style={{ color: "var(--text-2)" }}>{row.comp}</td>
+                  <td className="py-3 px-4 text-sm" style={{ color: "var(--text-2)" }}>{row.notes}</td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
-        <div
-          className="px-5 py-3 text-xs"
-          style={{ borderTop: "1px solid var(--border)", color: "var(--text-3)" }}
-        >
+        <div className="px-4 py-3 text-xs" style={{ borderTop: "1px solid var(--border)", color: "var(--text-3)" }}>
           Sources: IAB CTV Benchmarks 2024 · Roku Action Ads case studies · eMarketer CTV Ad Spend Q1 2025
         </div>
       </div>
@@ -292,28 +278,28 @@ export default function CaseStudy() {
       <Divider />
 
       {/* Success metrics */}
-      <SectionTitle>Success metrics</SectionTitle>
-      <div className="grid grid-cols-3 gap-4">
+      <SectionTitle>Success metrics — if this shipped in OneView</SectionTitle>
+      <p className="text-sm leading-relaxed mb-5" style={{ color: "var(--text-2)" }}>
+        How I&apos;d measure whether Campaign Preview is actually driving advertiser value.
+      </p>
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         {[
-          { value: "≥3 min", label: "Session duration", sub: "70% of users on Simulator tab" },
-          { value: "50", label: "Unique users / 30 days", sub: "ProductHunt + r/PPC launch" },
-          { value: "3+", label: "LinkedIn DMs", sub: "From CTV marketers · signal validation" },
+          { value: "+15%", label: "Repeat campaign rate", sub: "Advertisers who used preview vs. those who didn't — 90-day window" },
+          { value: "↓20%", label: "Support tickets re: format", sub: "\"We didn't know what to expect\" tickets — measures education gap closed" },
+          { value: "+8%", label: "Premium format adoption", sub: "Share of campaigns choosing Action Ads or Choice Ads over Standard 30s" },
         ].map((m) => (
           <div
             key={m.label}
-            className="rounded-xl p-4 text-center"
+            className="rounded-xl p-4"
             style={{ background: "var(--surface)", border: "1px solid var(--border)" }}
           >
-            <p
-              className="font-bold tabular-nums mb-1"
-              style={{ fontSize: "1.75rem", color: "var(--accent)", letterSpacing: "-0.025em" }}
-            >
+            <p className="font-bold tabular-nums mb-1" style={{ fontSize: "1.75rem", color: "var(--accent)", letterSpacing: "-0.025em" }}>
               {m.value}
             </p>
-            <p className="text-sm font-medium mb-1" style={{ color: "var(--text)" }}>
+            <p className="text-sm font-medium mb-1.5" style={{ color: "var(--text)" }}>
               {m.label}
             </p>
-            <p className="text-xs" style={{ color: "var(--text-3)" }}>
+            <p className="text-xs leading-relaxed" style={{ color: "var(--text-3)" }}>
               {m.sub}
             </p>
           </div>
@@ -323,16 +309,16 @@ export default function CaseStudy() {
       <Divider />
 
       {/* Build context */}
-      <SectionTitle>Build context</SectionTitle>
+      <SectionTitle>About this prototype</SectionTitle>
       <div
         className="rounded-xl p-5 text-sm space-y-2"
         style={{ background: "var(--surface)", border: "1px solid var(--border)" }}
       >
         {[
-          ["Stack", "Next.js 16 App Router · Tailwind CSS · Recharts · Claude API via OpenRouter"],
-          ["Built with", "Claude Code (claude-sonnet-4-6) · Multi-agent workflow"],
-          ["Data sources", "IAB CTV Benchmarks 2024 · Deloitte Digital Media Trends 2025 · Roku Shoptalk 2025 · Marketing Brew May 2025"],
-          ["Deploy", "Vercel (free tier) · Static benchmark data, no backend required for simulator"],
+          ["What it is", "A working prototype of the Campaign Preview concept — built to validate the UX and demonstrate the PM thinking behind it"],
+          ["Stack", "Next.js 16 · Tailwind CSS · Recharts · Claude API via OpenRouter · Vercel"],
+          ["Data", "IAB CTV Benchmarks 2024 · Deloitte Digital Media Trends 2025 · Roku Shoptalk 2025"],
+          ["Limitations", "Uses static benchmark data — Roku's real ACR data would make predictions significantly more accurate"],
         ].map(([k, v]) => (
           <div key={k} className="flex gap-3">
             <span className="shrink-0 font-medium" style={{ color: "var(--text)", minWidth: "90px" }}>{k}</span>

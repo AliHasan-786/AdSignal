@@ -16,25 +16,21 @@ export async function POST(req: NextRequest) {
       qr_code: "QR Code Overlay",
     };
 
-    const prompt = `You are an expert CTV advertising strategist. A media planner has configured an ad format simulation with the following parameters:
+    const prompt = `You are a CTV advertising strategist advising a media planner. Write in plain prose — no headers, no bullet points, no markdown formatting whatsoever. Just 3 direct sentences.
 
-FORMAT: ${formatLabels[inputs.format] || inputs.format}
-CATEGORY: ${inputs.category}
-AD LENGTH: ${inputs.adLength}s
-INTERACTIVITY LEVEL: ${inputs.interactivityLevel}/5
-TARGET FREQUENCY: ${inputs.targetFrequency}x per day
+The planner has simulated this format:
+- Format: ${formatLabels[inputs.format] || inputs.format}
+- Category: ${inputs.category}
+- Ad length: ${inputs.adLength}s
+- Interactivity: ${inputs.interactivityLevel}/5
+- Frequency: ${inputs.targetFrequency}x per day
 
-SIMULATION RESULTS (based on IAB CTV Benchmarks 2024 and Deloitte Digital Media Trends 2025):
+Simulation results (IAB CTV Benchmarks 2024 / Deloitte 2025):
 - Predicted CTR: ${output.ctrFormatted}
-- Completion Rate: ${output.completionFormatted}
-- Ad Fatigue Score: ${output.fatigueScore}/10 (${output.fatigueLabel})
+- Completion rate: ${output.completionFormatted}
+- Fatigue score: ${output.fatigueScore}/10 (${output.fatigueLabel})
 
-Based on these specific simulated results, provide a concise 3-4 sentence format recommendation. Explain:
-1. Whether this format/category combination is likely to perform well, citing the specific numbers
-2. The single most important risk factor (fatigue, completion drop-off, or CTR) and why
-3. One concrete action to improve the predicted outcome
-
-Be direct and analytical. Reference the specific metrics. Do not write marketing language.`;
+Write exactly 3 sentences: (1) whether this combination is likely to perform well and why, citing the specific numbers; (2) the single biggest risk and what's driving it; (3) one concrete change to improve the outcome. No markdown. No headers. No bullets. Plain sentences only.`;
 
     const response = await fetch(OPENROUTER_URL, {
       method: "POST",
@@ -46,7 +42,7 @@ Be direct and analytical. Reference the specific metrics. Do not write marketing
       },
       body: JSON.stringify({
         model: "anthropic/claude-haiku-4-5",
-        max_tokens: 280,
+        max_tokens: 320,
         messages: [{ role: "user", content: prompt }],
       }),
     });
