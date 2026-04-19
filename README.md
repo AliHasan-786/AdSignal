@@ -4,7 +4,7 @@
 
 A full product concept for Roku's OneView Ad Manager: a non-intrusive shoppable overlay triggered by viewer pause intent. Built as a complete PM artifact spanning problem discovery, product spec, interactive prototype, market research, and A/B test design.
 
-![Prototype demo: clicking through ad formats and advertiser categories](public/prototype-demo.gif)
+![Prototype demo: clicking through ad formats and advertiser categories](https://raw.githubusercontent.com/AliHasan-786/AdSignal/main/public/prototype-demo.gif)
 
 **Live:** [ad-signal.vercel.app](https://ad-signal.vercel.app) &nbsp;·&nbsp; **Stack:** Next.js 16 · Recharts · Claude API · Vercel
 
