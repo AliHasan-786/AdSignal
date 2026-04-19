@@ -127,26 +127,26 @@ export default function CaseStudy() {
           What this is
         </p>
         <p className="text-sm leading-relaxed" style={{ color: "var(--text-2)" }}>
-          AdSignal is a <span style={{ color: "var(--text)", fontWeight: 500 }}>product concept for Roku&apos;s OneView Ad Manager</span> — a Campaign Preview feature that would let advertisers simulate format performance before committing budget. This prototype validates the concept and demonstrates the PM thinking behind it: problem discovery, market research, feature prioritization, and success metrics.
+          AdSignal is a <span style={{ color: "var(--text)", fontWeight: 500 }}>product concept for Roku&apos;s OneView Ad Manager</span>: a Campaign Preview feature that would let advertisers simulate format performance before committing budget. This prototype validates the concept and demonstrates the PM thinking behind it: problem discovery, market research, feature prioritization, and success metrics.
         </p>
       </div>
 
       {/* Problem */}
       <SectionTitle>Problem statement</SectionTitle>
       <p className="text-sm leading-relaxed mb-6" style={{ color: "var(--text-2)" }}>
-        Advertisers buying CTV formats on Roku&apos;s OneView platform have no way to predict how a format will perform before launch. They select from a menu of formats — Standard 30s, Action Ads, Choice Ads — with only historical platform averages to guide them. There&apos;s no preview of engagement decay, no fatigue risk scoring by category, and no pre-campaign CTR estimate. The result is wasted spend, damaged viewer experience, and eroded advertiser trust in the platform.
+        Advertisers buying CTV formats on Roku&apos;s OneView platform have no way to predict how a format will perform before launch. They select from a menu of formats (Standard 30s, Action Ads, Choice Ads) with only historical platform averages to guide them. There&apos;s no preview of engagement decay, no fatigue risk scoring by category, and no pre-campaign CTR estimate. The result is wasted spend, damaged viewer experience, and eroded advertiser trust in the platform.
       </p>
 
       <div className="space-y-3">
         <StatCard
           stat="$40K"
-          label="wasted — no pre-campaign format prediction"
-          source="r/PPC — representative advertiser account"
+          label="wasted: no pre-campaign format prediction"
+          source="r/PPC (representative advertiser account)"
           url="https://www.reddit.com/r/PPC/"
           accent="var(--red)"
           badge="representative"
         >
-          &ldquo;We spent $40K on a CTV interactive ad campaign. Completion rate was 12%. We had no idea what to expect before launch. The platform gives you historical averages but nothing specific to your format or category.&rdquo; — CTV advertiser, r/PPC
+          &ldquo;We spent $40K on a CTV interactive ad campaign. Completion rate was 12%. We had no idea what to expect before launch. The platform gives you historical averages but nothing specific to your format or category.&rdquo; (CTV advertiser, r/PPC)
         </StatCard>
 
         <StatCard
@@ -157,18 +157,18 @@ export default function CaseStudy() {
           accent="var(--amber)"
           badge="real"
         >
-          Ad fatigue is a platform-level risk for Roku, not just an advertiser problem. Over-frequency or low-quality format selection harms viewer retention — but Roku has no tool that helps advertisers make better choices before campaigns go live.
+          Ad fatigue is a platform-level risk for Roku, not just an advertiser problem. Over-frequency or low-quality format selection harms viewer retention, and Roku has no tool that helps advertisers make better choices before campaigns go live.
         </StatCard>
 
         <StatCard
           stat="0"
           label="pre-campaign format preview tools in Roku's Ad Manager"
-          source="Marketing Brew — CTV advertising coverage"
+          source="Marketing Brew: CTV advertising coverage"
           url="https://www.marketingbrew.com/topics/video"
           accent="var(--text-2)"
           badge="synthetic"
         >
-          &ldquo;The risk of annoying users is real when interactivity isn&apos;t intuitive.&rdquo; Shoppable and interactive formats are Roku&apos;s highest-CPM inventory — but without a preview mechanism, advertisers can&apos;t confidently commit to premium formats.
+          &ldquo;The risk of annoying users is real when interactivity isn&apos;t intuitive.&rdquo; Shoppable and interactive formats are Roku&apos;s highest-CPM inventory, but without a preview mechanism, advertisers can&apos;t confidently commit to premium formats.
         </StatCard>
       </div>
 
@@ -179,11 +179,11 @@ export default function CaseStudy() {
       <div className="space-y-4 text-sm leading-relaxed" style={{ color: "var(--text-2)" }}>
         <p>
           <span style={{ color: "var(--text)", fontWeight: 500 }}>Why Roku is uniquely positioned to build this: </span>
-          Roku has ACR data across 100M+ households, format-level performance data from thousands of campaigns, and category-specific engagement signals that no third party has access to. A Campaign Preview feature powered by this data would be dramatically more accurate than IAB averages — and would be a meaningful differentiator for OneView against Amazon Ads and Peacock.
+          Roku has ACR data across 100M+ households, format-level performance data from thousands of campaigns, and category-specific engagement signals that no third party has access to. A Campaign Preview feature powered by this data would be dramatically more accurate than IAB averages and would be a meaningful differentiator for OneView against Amazon Ads and Peacock.
         </p>
         <p>
           <span style={{ color: "var(--text)", fontWeight: 500 }}>Roku VP of Advertising, Shoptalk 2025: </span>
-          &ldquo;We need to meet the consumer where they&apos;re at in terms of how they want to interact.&rdquo; Format selection is where that starts — and right now advertisers are guessing.{" "}
+          &ldquo;We need to meet the consumer where they&apos;re at in terms of how they want to interact.&rdquo; Format selection is where that starts, and right now advertisers are guessing.{" "}
           <a
             href="https://advertising.roku.com/learn/resources/retail-meets-the-remote-rokus-takeaways-from-shoptalk-2025"
             target="_blank"
@@ -196,7 +196,7 @@ export default function CaseStudy() {
         </p>
         <p>
           <span style={{ color: "var(--text)", fontWeight: 500 }}>The PM angle: </span>
-          This is an advertiser-facing product problem that sits at the intersection of Roku&apos;s three core interests — growing ad revenue, protecting viewer experience, and increasing advertiser confidence in premium format inventory. An APM on Ad Experiences would own this feature end-to-end: from discovery through spec, launch, and iteration.
+          This is an advertiser-facing product problem that sits at the intersection of Roku&apos;s three core interests: growing ad revenue, protecting viewer experience, and increasing advertiser confidence in premium format inventory. An APM on Ad Experiences would own this feature end-to-end: from discovery through spec, launch, and iteration.
         </p>
       </div>
 
@@ -204,7 +204,7 @@ export default function CaseStudy() {
 
       {/* RICE */}
       <div className="flex items-center gap-2 mb-5">
-        <SectionTitle>Feature prioritization — RICE</SectionTitle>
+        <SectionTitle>Feature prioritization: RICE</SectionTitle>
         <DataBadge type="modeled" />
       </div>
       <p className="text-sm leading-relaxed mb-5" style={{ color: "var(--text-2)" }}>
@@ -265,7 +265,7 @@ export default function CaseStudy() {
 
       {/* Competitive teardown */}
       <div className="flex items-center gap-2 mb-5">
-        <SectionTitle>Competitive teardown — interactive CTV formats</SectionTitle>
+        <SectionTitle>Competitive teardown: interactive CTV formats</SectionTitle>
         <DataBadge type="modeled" />
       </div>
       <p className="text-sm leading-relaxed mb-5" style={{ color: "var(--text-2)" }}>
@@ -318,14 +318,14 @@ export default function CaseStudy() {
       <Divider />
 
       {/* Success metrics */}
-      <SectionTitle>Success metrics — if this shipped in OneView</SectionTitle>
+      <SectionTitle>Success metrics: if this shipped in OneView</SectionTitle>
       <p className="text-sm leading-relaxed mb-5" style={{ color: "var(--text-2)" }}>
         How I&apos;d measure whether Campaign Preview is actually driving advertiser value.
       </p>
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         {[
-          { value: "+15%", label: "Repeat campaign rate", sub: "Advertisers who used preview vs. those who didn't — 90-day window" },
-          { value: "↓20%", label: "Support tickets re: format", sub: "\"We didn't know what to expect\" tickets — measures education gap closed" },
+          { value: "+15%", label: "Repeat campaign rate", sub: "Advertisers who used preview vs. those who didn't (90-day window)" },
+          { value: "↓20%", label: "Support tickets re: format", sub: "\"We didn't know what to expect\" tickets; measures education gap closed" },
           { value: "+8%", label: "Premium format adoption", sub: "Share of campaigns choosing Action Ads or Choice Ads over Standard 30s" },
         ].map((m) => (
           <div
@@ -355,10 +355,10 @@ export default function CaseStudy() {
         style={{ background: "var(--surface)", border: "1px solid var(--border)" }}
       >
         {[
-          ["What it is", "A working prototype of the Campaign Preview concept — built to validate the UX and demonstrate the PM thinking behind it"],
+          ["What it is", "A working prototype of the Campaign Preview concept, built to validate the UX and demonstrate the PM thinking behind it"],
           ["Stack", "Next.js 16 · Tailwind CSS · Recharts · Claude API via OpenRouter · Vercel"],
           ["Data", "IAB CTV Benchmarks 2024 · Deloitte Digital Media Trends 2025 · Roku Shoptalk 2025"],
-          ["Limitations", "Uses static benchmark data — Roku's real ACR data would make predictions significantly more accurate"],
+          ["Limitations", "Uses static benchmark data; Roku's real ACR data would make predictions significantly more accurate"],
         ].map(([k, v]) => (
           <div key={k} className="flex gap-3">
             <span className="shrink-0 font-medium" style={{ color: "var(--text)", minWidth: "90px" }}>{k}</span>

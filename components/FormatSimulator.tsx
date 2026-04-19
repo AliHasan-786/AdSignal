@@ -201,7 +201,7 @@ export default function FormatSimulator() {
             Modeled data
           </span>
           <span className="text-xs" style={{ color: "var(--text-3)" }}>
-            Estimates derived from IAB CTV Benchmarks 2024 — not Roku internal data
+            Estimates derived from IAB CTV Benchmarks 2024 (not Roku internal data)
           </span>
         </div>
 
@@ -387,9 +387,9 @@ export default function FormatSimulator() {
             className="px-5 pb-4 flex items-center gap-4 text-xs"
             style={{ color: "var(--text-3)" }}
           >
-            <span>vs. 0.30% standard CTR avg — IAB 2024</span>
+            <span>vs. 0.30% standard CTR avg (IAB 2024)</span>
             <span>·</span>
-            <span>CTV avg 78% completion for 30s — IAB 2024</span>
+            <span>CTV avg 78% completion for 30s (IAB 2024)</span>
           </div>
         </div>
 

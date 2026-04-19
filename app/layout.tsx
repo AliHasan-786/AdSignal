@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "AdSignal — CTV Ad Format Intelligence",
+  title: "AdSignal: CTV Ad Format Intelligence",
   description:
     "Pre-campaign CTV ad format simulator. Predict engagement decay, CTR, completion rate, and ad fatigue before committing budget.",
 };

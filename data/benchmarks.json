@@ -80,8 +80,8 @@
     "health": { "ctr": 1.05, "completion": 1.01, "fatigue": 0.92, "label": "Health & Wellness" }
   },
   "fatigueThresholds": {
-    "low": { "max": 3.5, "label": "Low Risk", "color": "green", "description": "Minimal viewer disruption — safe to run at standard frequency" },
+    "low": { "max": 3.5, "label": "Low Risk", "color": "green", "description": "Minimal viewer disruption; safe to run at standard frequency" },
     "moderate": { "max": 6.0, "label": "Moderate Risk", "color": "yellow", "description": "Monitor completion drop-off; consider frequency capping at 3x/day" },
-    "high": { "max": 10.0, "label": "High Risk", "color": "red", "description": "Strong churn signal — Deloitte (2025) found 47% of subscribers would cancel if ad load increased" }
+    "high": { "max": 10.0, "label": "High Risk", "color": "red", "description": "Strong churn signal. Deloitte (2025) found 47% of subscribers would cancel if ad load increased" }
   }
 }

@@ -53,13 +53,13 @@ const TABS = [
     id: "brief",
     label: "The Brief",
     step: "01",
-    description: "PRD — problem, user stories, acceptance criteria, rollout",
+    description: "PRD: problem, user stories, acceptance criteria, rollout",
   },
   {
     id: "format-spec",
     label: "Format Spec",
     step: "02",
-    description: "UX states, interactions, device behavior — the engineering handoff",
+    description: "UX states, interactions, device behavior (engineering handoff)",
   },
   {
     id: "simulator",
@@ -77,7 +77,7 @@ const TABS = [
     id: "measure",
     label: "Measure",
     step: "05",
-    description: "A/B test design — sample size, duration, statistical power",
+    description: "A/B test design: sample size, duration, statistical power",
   },
 ] as const;
 
@@ -230,10 +230,10 @@ export default function Home() {
                 className="font-extrabold leading-tight mb-2"
                 style={{ fontSize: "1.875rem", letterSpacing: "-0.035em", color: "var(--text)" }}
               >
-                ShopPause — Shoppable Pause Ad
+                ShopPause: Shoppable Pause Ad
               </h1>
               <p className="text-sm leading-relaxed" style={{ color: "var(--text-2)", maxWidth: "52ch" }}>
-                A product concept for Roku&apos;s OneView Ad Manager: a non-intrusive shoppable overlay triggered by viewer pause intent. Full PM artifact — PRD, UX spec, prototype, research, and measurement plan.
+                A product concept for Roku&apos;s OneView Ad Manager: a non-intrusive shoppable overlay triggered by viewer pause intent. Full PM artifact: PRD, UX spec, prototype, research, and measurement plan.
               </p>
             </div>
 
@@ -296,7 +296,7 @@ export default function Home() {
             <TheBrief />
             {nextTab && (
               <NextStepButton
-                label={`Next: ${nextTab.step} ${nextTab.label} — ${nextTab.description}`}
+                label={`Next: ${nextTab.step} ${nextTab.label} · ${nextTab.description}`}
                 onClick={() => setActiveTab(nextTab.id)}
               />
             )}
@@ -307,7 +307,7 @@ export default function Home() {
             <FormatSpec />
             {nextTab && (
               <NextStepButton
-                label={`Next: ${nextTab.step} ${nextTab.label} — ${nextTab.description}`}
+                label={`Next: ${nextTab.step} ${nextTab.label} · ${nextTab.description}`}
                 onClick={() => setActiveTab(nextTab.id)}
               />
             )}
@@ -318,7 +318,7 @@ export default function Home() {
             <FormatSimulator />
             {nextTab && (
               <NextStepButton
-                label={`Next: ${nextTab.step} ${nextTab.label} — ${nextTab.description}`}
+                label={`Next: ${nextTab.step} ${nextTab.label} · ${nextTab.description}`}
                 onClick={() => setActiveTab(nextTab.id)}
               />
             )}
@@ -329,7 +329,7 @@ export default function Home() {
             <CaseStudy />
             {nextTab && (
               <NextStepButton
-                label={`Next: ${nextTab.step} ${nextTab.label} — ${nextTab.description}`}
+                label={`Next: ${nextTab.step} ${nextTab.label} · ${nextTab.description}`}
                 onClick={() => setActiveTab(nextTab.id)}
               />
             )}

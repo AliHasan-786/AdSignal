@@ -44,8 +44,8 @@ export default function FormatSpec() {
           Shoppable Pause Ad
         </h1>
         <p style={{ color: "var(--text-2)", fontSize: "0.95rem", lineHeight: 1.6, maxWidth: "560px" }}>
-          Non-intrusive shoppable overlay triggered by viewer pause intent — designed for Roku
-          OneView v1
+          Non-intrusive shoppable overlay triggered by viewer pause intent. Designed for Roku
+          OneView v1.
         </p>
       </div>
 
@@ -234,7 +234,7 @@ export default function FormatSpec() {
       <div style={{ borderTop: "1px solid var(--border)", margin: "2.5rem 0" }} />
 
       {/* ── 4. Remote Control Mapping ─────────────────────────────────────── */}
-      <SectionHeading>Interaction Model — Remote Control Mapping</SectionHeading>
+      <SectionHeading>Interaction Model: Remote Control Mapping</SectionHeading>
       <p style={{ color: "var(--text-2)", fontSize: "0.875rem", marginBottom: "20px" }}>
         Every Roku remote input must have a defined behavior during overlay presence.
       </p>
@@ -253,11 +253,11 @@ export default function FormatSpec() {
           },
           {
             key: "D-pad ↑↓←→",
-            action: "Navigates between overlay options — Up/Down moves through the three CTAs",
+            action: "Navigates between overlay options; Up/Down moves through the three CTAs",
           },
           {
             key: "Back / Play-Pause",
-            action: "Dismisses overlay immediately and resumes content — no impression logged as conversion",
+            action: "Dismisses overlay immediately and resumes content; no impression logged as conversion",
           },
           {
             key: "Home",
@@ -265,7 +265,7 @@ export default function FormatSpec() {
           },
           {
             key: "No input · 8s",
-            action: "Auto-dismiss triggered — overlay fades out, impression recorded, playback resumes",
+            action: "Auto-dismiss triggered; overlay fades out, impression recorded, playback resumes",
           },
         ].map((row, i, arr) => (
           <div
@@ -431,12 +431,12 @@ export default function FormatSpec() {
           },
           {
             scenario: "Kids profile / Y or Y7 content",
-            behavior: "Overlay fully suppressed — no fallback, no impression",
+            behavior: "Overlay fully suppressed; no fallback, no impression",
             why: "COPPA compliance + viewer trust",
           },
           {
             scenario: "Offline / network error",
-            behavior: "Silent fallback — overlay never appears, no impression logged",
+            behavior: "Silent fallback; overlay never appears, no impression logged",
             why: "Ad quality: never show a broken experience",
           },
           {
@@ -446,7 +446,7 @@ export default function FormatSpec() {
           },
           {
             scenario: "Frequency cap exceeded",
-            behavior: "Overlay suppressed — max 1 per session, 3 per 24h per household",
+            behavior: "Overlay suppressed; max 1 per session, 3 per 24h per household",
             why: "Frequency cap exceeded",
           },
           {
@@ -489,7 +489,7 @@ export default function FormatSpec() {
       <div style={{ borderTop: "1px solid var(--border)", margin: "2.5rem 0" }} />
 
       {/* ── 7. Non-goals (v1 scope) ───────────────────────────────────────── */}
-      <SectionHeading>Non-Goals — v1 Scope</SectionHeading>
+      <SectionHeading>Non-Goals: v1 Scope</SectionHeading>
       <p style={{ color: "var(--text-2)", fontSize: "0.875rem", marginBottom: "20px" }}>
         Explicitly out of scope for this release. Defer to backlog.
       </p>
@@ -520,7 +520,7 @@ export default function FormatSpec() {
             'Voice-initiated shopping ("OK Roku, buy this")',
             "Real-time inventory / price sync",
             "Multi-product carousel within overlay",
-            "Personalized product recommendations (ACR-powered — v2)",
+            "Personalized product recommendations (ACR-powered, v2 scope)",
           ].map((item) => (
             <li
               key={item}
@@ -545,7 +545,7 @@ export default function FormatSpec() {
       <div style={{ borderTop: "1px solid var(--border)", margin: "2.5rem 0" }} />
 
       {/* ── 8. Open Questions ─────────────────────────────────────────────── */}
-      <SectionHeading>Open Questions — Cross-functional Review</SectionHeading>
+      <SectionHeading>Open Questions: Cross-functional Review</SectionHeading>
       <p style={{ color: "var(--text-2)", fontSize: "0.875rem", marginBottom: "20px" }}>
         These must be resolved before engineering kickoff. Owners assigned per team.
       </p>

@@ -233,7 +233,7 @@ export default function TheBrief() {
         <span style={{ color: "var(--border-2, rgba(255,255,255,0.10))" }}>|</span>
         <div className="flex items-center gap-1.5">
           <span style={{ color: "var(--text-3)" }}>Last updated</span>
-          <span style={{ color: "var(--text)" }}>April 2025</span>
+          <span style={{ color: "var(--text)" }}>April 2026</span>
         </div>
       </div>
 
@@ -241,7 +241,7 @@ export default function TheBrief() {
       <section>
         <SectionTitle>Problem Statement</SectionTitle>
         <p className="text-sm leading-relaxed mb-4" style={{ color: "var(--text-2)" }}>
-          Roku&apos;s current interactive formats — Action Ads, QR overlays, Choice Ads — all require the viewer to
+          Roku&apos;s current interactive formats (Action Ads, QR overlays, Choice Ads) all require the viewer to
           be in an active-attention state during playback. The viewer must notice, process, and respond to an ad
           while content is running. The pause moment is the highest-intent, lowest-friction interaction window in
           CTV: the viewer has voluntarily stopped, they&apos;re holding the remote, and they&apos;re in a reflective
@@ -260,7 +260,7 @@ export default function TheBrief() {
           <p className="text-sm leading-relaxed" style={{ color: "var(--text-2)" }}>
             Shoppable CTV is Roku&apos;s stated strategic priority (Shoptalk 2025). Action Ads already demonstrate
             1.8–2.4% CTR at a 30% CPM premium. Pause-triggered formats haven&apos;t been productized on any major
-            CTV platform — this is a first-mover opportunity.
+            CTV platform. This is a first-mover opportunity.
           </p>
         </div>
       </section>
@@ -309,7 +309,7 @@ export default function TheBrief() {
                 ShopPause promise
               </p>
               <p className="text-xs leading-relaxed" style={{ color: "var(--text-2)" }}>
-                Only appears when you&apos;ve already paused — you&apos;re in control
+                Only appears when you&apos;ve already paused. You&apos;re in control.
               </p>
             </div>
           </div>
@@ -418,7 +418,7 @@ export default function TheBrief() {
               fontWeight: 600,
             }}
           >
-            Projected targets — not Roku internal data
+            Projected targets (not Roku internal data)
           </span>
         </div>
         <p className="text-xs font-semibold uppercase tracking-wide mb-3" style={{ color: "var(--text-3)" }}>
@@ -455,7 +455,7 @@ export default function TheBrief() {
           <div className="flex items-center gap-2 mb-3">
             <span style={{ color: "var(--amber)", fontSize: "0.85rem" }}>⚠</span>
             <p className="text-xs font-semibold" style={{ color: "var(--amber)" }}>
-              Must not degrade — any breach triggers immediate review
+              Must not degrade. Any breach triggers immediate review.
             </p>
           </div>
           <ul className="space-y-2">
@@ -609,7 +609,7 @@ export default function TheBrief() {
             {
               team: "Data Science",
               question:
-                "How do we attribute a purchase if the viewer scanned the QR code 2+ hours after the pause event? Proposing 24-hour view-through window — needs alignment.",
+                "How do we attribute a purchase if the viewer scanned the QR code 2+ hours after the pause event? Proposing 24-hour view-through window; needs alignment.",
             },
             {
               team: "Sales",

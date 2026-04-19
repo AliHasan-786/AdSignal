@@ -27,7 +27,7 @@ const CATEGORY_CONTENT: Record<CategoryKey, {
     choiceQuestion: "What matters most in your next shoe?",
     choiceOptions: ["Performance & speed", "Everyday comfort"],
     qrUrl: "Nike.com/spring25", bannerCta: "Shop the new collection →",
-    emoji: "👟", adHeadline: "Nike Running — Spring 2025",
+    emoji: "👟", adHeadline: "Nike Running: Spring 2025",
   },
   cpg: {
     brand: "Oat\u00adly", product: "Oat Drink Barista", price: "$5.99",
@@ -35,7 +35,7 @@ const CATEGORY_CONTENT: Record<CategoryKey, {
     choiceQuestion: "How do you start your morning?",
     choiceOptions: ["Coffee first", "Smoothie first"],
     qrUrl: "Oatly.com/find", bannerCta: "Find it near you →",
-    emoji: "🥛", adHeadline: "Oatly — Find at your local store",
+    emoji: "🥛", adHeadline: "Oatly: Find at your local store",
   },
   auto: {
     brand: "Rivian", product: "R1T Electric Truck", price: "From $69,900",
@@ -43,7 +43,7 @@ const CATEGORY_CONTENT: Record<CategoryKey, {
     choiceQuestion: "What\u2019s your next road trip priority?",
     choiceOptions: ["Off-road capability", "Range & efficiency"],
     qrUrl: "Rivian.com/test-drive", bannerCta: "Book a test drive →",
-    emoji: "🚗", adHeadline: "Rivian — Configure yours today",
+    emoji: "🚗", adHeadline: "Rivian: Configure yours today",
   },
   finance: {
     brand: "Amex", product: "Platinum Card\u00ae", price: "Earn 5× points",
@@ -51,7 +51,7 @@ const CATEGORY_CONTENT: Record<CategoryKey, {
     choiceQuestion: "What rewards matter most to you?",
     choiceOptions: ["Travel & lounge access", "Cash back & everyday perks"],
     qrUrl: "Amex.com/platinum", bannerCta: "See if you\u2019re pre-approved →",
-    emoji: "💳", adHeadline: "American Express — Membership has rewards",
+    emoji: "💳", adHeadline: "American Express: Membership has rewards",
   },
   entertainment: {
     brand: "Spotify", product: "Premium Individual", price: "$11.99/mo",
@@ -59,7 +59,7 @@ const CATEGORY_CONTENT: Record<CategoryKey, {
     choiceQuestion: "How do you listen most?",
     choiceOptions: ["On the go / commute", "At home / working"],
     qrUrl: "Spotify.com/premium", bannerCta: "Try 3 months free →",
-    emoji: "🎵", adHeadline: "Spotify Premium — First month free",
+    emoji: "🎵", adHeadline: "Spotify Premium: First month free",
   },
   travel: {
     brand: "Delta", product: "SkyMiles\u00ae Reserve Card", price: "60K bonus miles",
@@ -67,7 +67,7 @@ const CATEGORY_CONTENT: Record<CategoryKey, {
     choiceQuestion: "What\u2019s your next trip goal?",
     choiceOptions: ["International adventure", "Domestic weekend"],
     qrUrl: "Delta.com/reserve", bannerCta: "Apply and start earning →",
-    emoji: "✈️", adHeadline: "Delta Air Lines — Summer fares from $199",
+    emoji: "✈️", adHeadline: "Delta Air Lines: Summer fares from $199",
   },
   telecom: {
     brand: "T-Mobile", product: "Go5G Next", price: "$85/mo",
@@ -75,7 +75,7 @@ const CATEGORY_CONTENT: Record<CategoryKey, {
     choiceQuestion: "What matters most in your phone plan?",
     choiceOptions: ["Fastest 5G speeds", "Best price & value"],
     qrUrl: "T-Mobile.com/plans", bannerCta: "Switch and save →",
-    emoji: "📱", adHeadline: "T-Mobile — Switch, get iPhone 16 on us",
+    emoji: "📱", adHeadline: "T-Mobile: Switch, get iPhone 16 on us",
   },
   health: {
     brand: "Peloton", product: "Bike+", price: "$2,495",
@@ -83,7 +83,7 @@ const CATEGORY_CONTENT: Record<CategoryKey, {
     choiceQuestion: "What\u2019s your fitness goal right now?",
     choiceOptions: ["Build strength", "Improve cardio"],
     qrUrl: "Onepeloton.com/bike", bannerCta: "Try 30 days free →",
-    emoji: "🏋️", adHeadline: "Peloton — 0% APR financing available",
+    emoji: "🏋️", adHeadline: "Peloton: 0% APR financing available",
   },
 };
 
@@ -480,7 +480,7 @@ function ConversionOverlay({ content, onDone }: { content: ProductContent; onDon
         <p style={{ fontSize: "12px", fontWeight: 700, color: "#111", marginBottom: "4px" }}>Scan to shop on your phone</p>
         <p style={{ fontSize: "10px", color: "#888", marginBottom: "14px", lineHeight: 1.4 }}>{content.brand} · {content.product} · {content.price}</p>
         <button onClick={onDone} style={{ width: "100%", padding: "8px", borderRadius: "8px", background: "#7c6af5", color: "#fff", fontSize: "11px", fontWeight: 700, fontFamily: "inherit", cursor: "pointer", border: "none" }}>
-          Done — Resume Playback
+          Done. Resume Playback
         </button>
       </div>
     </div>
@@ -543,11 +543,11 @@ export default function TVPrototype({ format = "shoppable", category = "retail" 
   };
 
   const stateLabel: Record<DemoState, string> = {
-    playing: isStandardAd ? "Content playing — click to trigger ad" : meta.pauseRequired ? "Content playing" : "Content playing",
-    detecting: "Pause detected — loading overlay…",
+    playing: isStandardAd ? "Content playing: click to trigger ad" : meta.pauseRequired ? "Content playing" : "Content playing",
+    detecting: "Pause detected: loading overlay…",
     overlay: "Ad active",
     focused: "Viewer navigating overlay",
-    converted: "Shop Now — QR generated",
+    converted: "Shop Now: QR generated",
     dismissed: "Overlay dismissed",
   };
 
@@ -601,7 +601,7 @@ export default function TVPrototype({ format = "shoppable", category = "retail" 
           <div style={{ textAlign: "center", zIndex: 1, opacity: isPaused && meta.pauseRequired ? 0.4 : 0.9, transition: "opacity 0.3s" }}>
             <p style={{ fontSize: "clamp(8px, 2vw, 14px)", color: "rgba(255,255,255,0.5)", letterSpacing: "0.2em", textTransform: "uppercase", marginBottom: "6px" }}>Netflix Original</p>
             <p style={{ fontSize: "clamp(14px, 3.5vw, 28px)", color: "#fff", fontWeight: 800, letterSpacing: "-0.03em", marginBottom: "4px" }}>Stranger Things</p>
-            <p style={{ fontSize: "clamp(8px, 1.8vw, 12px)", color: "rgba(255,255,255,0.4)" }}>Season 2, Episode 4 — "Will the Wise"</p>
+            <p style={{ fontSize: "clamp(8px, 1.8vw, 12px)", color: "rgba(255,255,255,0.4)" }}>Season 2, Episode 4: &ldquo;Will the Wise&rdquo;</p>
           </div>
 
           {/* Pause icon (only for pause-triggered formats) */}
@@ -700,9 +700,9 @@ export default function TVPrototype({ format = "shoppable", category = "retail" 
 
       <p className="text-center text-xs mt-3" style={{ color: "var(--text-3)" }}>
         {isStandardAd
-          ? "Standard ads interrupt playback — viewer cannot skip until after 5s"
+          ? "Standard ads interrupt playback; viewer cannot skip until after 5s"
           : meta.pauseRequired
-          ? state === "playing" ? "Press Pause — overlay appears after 500ms detection delay" : "Press Resume to dismiss and continue"
+          ? state === "playing" ? "Press Pause; overlay appears after 500ms detection delay" : "Press Resume to dismiss and continue"
           : state === "playing" ? "Click to show the ad overlay" : "Click to hide overlay"}
       </p>
     </div>
