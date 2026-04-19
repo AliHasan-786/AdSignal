@@ -1,11 +1,91 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import type { FormatKey } from "@/lib/formatPredictor";
+import type { FormatKey, CategoryKey } from "@/lib/formatPredictor";
 
 type DemoState = "playing" | "detecting" | "overlay" | "focused" | "converted" | "dismissed";
 
 const COUNTDOWN_START = 8;
+
+// ── Category-aware product content ───────────────────────────────────────────
+
+const CATEGORY_CONTENT: Record<CategoryKey, {
+  brand: string;
+  product: string;
+  price: string;
+  tagline: string;
+  choiceQuestion: string;
+  choiceOptions: [string, string];
+  qrUrl: string;
+  bannerCta: string;
+  emoji: string;
+  adHeadline: string;
+}> = {
+  retail: {
+    brand: "Nike", product: "Air Force 1 \u201907", price: "$110",
+    tagline: "Built for the pace of now.",
+    choiceQuestion: "What matters most in your next shoe?",
+    choiceOptions: ["Performance & speed", "Everyday comfort"],
+    qrUrl: "Nike.com/spring25", bannerCta: "Shop the new collection →",
+    emoji: "👟", adHeadline: "Nike Running — Spring 2025",
+  },
+  cpg: {
+    brand: "Oat\u00adly", product: "Oat Drink Barista", price: "$5.99",
+    tagline: "It\u2019s like milk, but made for humans.",
+    choiceQuestion: "How do you start your morning?",
+    choiceOptions: ["Coffee first", "Smoothie first"],
+    qrUrl: "Oatly.com/find", bannerCta: "Find it near you →",
+    emoji: "🥛", adHeadline: "Oatly — Find at your local store",
+  },
+  auto: {
+    brand: "Rivian", product: "R1T Electric Truck", price: "From $69,900",
+    tagline: "Adventure starts at full charge.",
+    choiceQuestion: "What\u2019s your next road trip priority?",
+    choiceOptions: ["Off-road capability", "Range & efficiency"],
+    qrUrl: "Rivian.com/test-drive", bannerCta: "Book a test drive →",
+    emoji: "🚗", adHeadline: "Rivian — Configure yours today",
+  },
+  finance: {
+    brand: "Amex", product: "Platinum Card\u00ae", price: "Earn 5× points",
+    tagline: "Don\u2019t live life without it.",
+    choiceQuestion: "What rewards matter most to you?",
+    choiceOptions: ["Travel & lounge access", "Cash back & everyday perks"],
+    qrUrl: "Amex.com/platinum", bannerCta: "See if you\u2019re pre-approved →",
+    emoji: "💳", adHeadline: "American Express — Membership has rewards",
+  },
+  entertainment: {
+    brand: "Spotify", product: "Premium Individual", price: "$11.99/mo",
+    tagline: "Music without limits.",
+    choiceQuestion: "How do you listen most?",
+    choiceOptions: ["On the go / commute", "At home / working"],
+    qrUrl: "Spotify.com/premium", bannerCta: "Try 3 months free →",
+    emoji: "🎵", adHeadline: "Spotify Premium — First month free",
+  },
+  travel: {
+    brand: "Delta", product: "SkyMiles\u00ae Reserve Card", price: "60K bonus miles",
+    tagline: "Every mile takes you further.",
+    choiceQuestion: "What\u2019s your next trip goal?",
+    choiceOptions: ["International adventure", "Domestic weekend"],
+    qrUrl: "Delta.com/reserve", bannerCta: "Apply and start earning →",
+    emoji: "✈️", adHeadline: "Delta Air Lines — Summer fares from $199",
+  },
+  telecom: {
+    brand: "T-Mobile", product: "Go5G Next", price: "$85/mo",
+    tagline: "The network more people rely on.",
+    choiceQuestion: "What matters most in your phone plan?",
+    choiceOptions: ["Fastest 5G speeds", "Best price & value"],
+    qrUrl: "T-Mobile.com/plans", bannerCta: "Switch and save →",
+    emoji: "📱", adHeadline: "T-Mobile — Switch, get iPhone 16 on us",
+  },
+  health: {
+    brand: "Peloton", product: "Bike+", price: "$2,495",
+    tagline: "The best workout is the one you\u2019ll actually do.",
+    choiceQuestion: "What\u2019s your fitness goal right now?",
+    choiceOptions: ["Build strength", "Improve cardio"],
+    qrUrl: "Onepeloton.com/bike", bannerCta: "Try 30 days free →",
+    emoji: "🏋️", adHeadline: "Peloton — 0% APR financing available",
+  },
+};
 
 // ── Format metadata ───────────────────────────────────────────────────────────
 
@@ -56,8 +136,10 @@ function RokuStatusBar() {
 
 // ── Overlays per format ───────────────────────────────────────────────────────
 
+type ProductContent = typeof CATEGORY_CONTENT[CategoryKey];
+
 /** Standard 15s / 30s — full-screen linear ad replaces content */
-function StandardAdOverlay({ seconds, onDone }: { seconds: number; onDone: () => void }) {
+function StandardAdOverlay({ seconds, content, onDone }: { seconds: number; content: ProductContent; onDone: () => void }) {
   const [remaining, setRemaining] = useState(seconds);
   const [skippable, setSkippable] = useState(false);
 
@@ -87,16 +169,16 @@ function StandardAdOverlay({ seconds, onDone }: { seconds: number; onDone: () =>
           background: "linear-gradient(135deg, #7c6af5, #34d399)",
           margin: "0 auto 12px", display: "flex", alignItems: "center", justifyContent: "center",
         }}>
-          <span style={{ fontSize: "22px" }}>🏃</span>
+          <span style={{ fontSize: "22px" }}>{content.emoji}</span>
         </div>
         <p style={{ color: "rgba(255,255,255,0.5)", fontSize: "clamp(8px,1.4vw,11px)", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: "6px" }}>
           Sponsored
         </p>
         <p style={{ color: "#fff", fontWeight: 800, fontSize: "clamp(14px,2.8vw,22px)", letterSpacing: "-0.02em", marginBottom: "4px" }}>
-          Built for the pace of now.
+          {content.tagline}
         </p>
         <p style={{ color: "rgba(255,255,255,0.5)", fontSize: "clamp(9px,1.6vw,12px)" }}>
-          Nike Running — Spring 2025
+          {content.adHeadline}
         </p>
       </div>
 
@@ -134,7 +216,7 @@ function StandardAdOverlay({ seconds, onDone }: { seconds: number; onDone: () =>
 }
 
 /** Interactive Choice — two option buttons, D-pad navigable */
-function ChoiceAdOverlay({ visible, onDone }: { visible: boolean; onDone: () => void }) {
+function ChoiceAdOverlay({ visible, content, onDone }: { visible: boolean; content: ProductContent; onDone: () => void }) {
   const [selected, setSelected] = useState<number | null>(null);
 
   return (
@@ -148,13 +230,13 @@ function ChoiceAdOverlay({ visible, onDone }: { visible: boolean; onDone: () => 
       pointerEvents: visible ? "auto" : "none",
     }}>
       <p style={{ color: "rgba(255,255,255,0.7)", fontSize: "clamp(8px,1.4vw,11px)", marginBottom: "6px", letterSpacing: "0.08em", textTransform: "uppercase" }}>
-        Sponsored · Nike
+        Sponsored · {content.brand}
       </p>
       <p style={{ color: "#fff", fontWeight: 700, fontSize: "clamp(10px,2vw,16px)", marginBottom: "clamp(6px,1.5vw,12px)", letterSpacing: "-0.01em" }}>
-        What matters most in your next shoe?
+        {content.choiceQuestion}
       </p>
       <div style={{ display: "flex", gap: "clamp(6px,1.5vw,10px)" }}>
-        {["Performance & speed", "Everyday comfort"].map((opt, i) => (
+        {content.choiceOptions.map((opt, i) => (
           <button
             key={i}
             onClick={() => { setSelected(i); setTimeout(onDone, 900); }}
@@ -179,7 +261,7 @@ function ChoiceAdOverlay({ visible, onDone }: { visible: boolean; onDone: () => 
 }
 
 /** QR Code Overlay — corner overlay with scannable code */
-function QRCodeOverlay({ visible, onDismiss }: { visible: boolean; onDismiss: () => void }) {
+function QRCodeOverlay({ visible, content, onDismiss }: { visible: boolean; content: ProductContent; onDismiss: () => void }) {
   return (
     <div style={{
       position: "absolute", bottom: "clamp(8px,2vw,20px)", right: "clamp(8px,2vw,16px)",
@@ -193,7 +275,7 @@ function QRCodeOverlay({ visible, onDismiss }: { visible: boolean; onDismiss: ()
       pointerEvents: visible ? "auto" : "none",
     }}>
       <div style={{ background: "#111", padding: "clamp(4px,1vw,6px) clamp(8px,2vw,10px)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <span style={{ color: "#fff", fontSize: "clamp(7px,1.3vw,10px)", fontWeight: 700 }}>Nike</span>
+        <span style={{ color: "#fff", fontSize: "clamp(7px,1.3vw,10px)", fontWeight: 700 }}>{content.brand}</span>
         <button
           onClick={onDismiss}
           style={{ background: "none", border: "none", color: "rgba(255,255,255,0.5)", cursor: "pointer", fontSize: "clamp(8px,1.4vw,11px)", fontFamily: "inherit" }}
@@ -261,15 +343,15 @@ function QRCodeOverlay({ visible, onDismiss }: { visible: boolean; onDismiss: ()
             <rect x="30" y="30" width="10" height="10" rx="2" fill="#7c6af5" />
           </svg>
         </div>
-        <p style={{ fontSize: "clamp(7px,1.3vw,10px)", fontWeight: 700, color: "#111", marginBottom: "2px" }}>Scan to shop</p>
-        <p style={{ fontSize: "clamp(6px,1.1vw,9px)", color: "#888" }}>Nike.com/spring25</p>
+        <p style={{ fontSize: "clamp(7px,1.3vw,10px)", fontWeight: 700, color: "#111", marginBottom: "2px" }}>Scan to learn more</p>
+        <p style={{ fontSize: "clamp(6px,1.1vw,9px)", color: "#888" }}>{content.qrUrl}</p>
       </div>
     </div>
   );
 }
 
 /** Pause Ad — slim banner at the bottom, appears on pause */
-function PauseAdBanner({ visible, onDismiss }: { visible: boolean; onDismiss: () => void }) {
+function PauseAdBanner({ visible, content, onDismiss }: { visible: boolean; content: ProductContent; onDismiss: () => void }) {
   return (
     <div style={{
       position: "absolute", bottom: 0, left: 0, right: 0, zIndex: 10,
@@ -294,10 +376,10 @@ function PauseAdBanner({ visible, onDismiss }: { visible: boolean; onDismiss: ()
         </div>
         <div>
           <p style={{ color: "rgba(255,255,255,0.4)", fontSize: "clamp(7px,1.2vw,9px)", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: "2px" }}>
-            Sponsored · Nike
+            Sponsored · {content.brand}
           </p>
           <p style={{ color: "#fff", fontWeight: 700, fontSize: "clamp(9px,1.8vw,14px)", letterSpacing: "-0.01em" }}>
-            New season. New pace. Air Max 2025.
+            {content.tagline}
           </p>
         </div>
       </div>
@@ -311,7 +393,7 @@ function PauseAdBanner({ visible, onDismiss }: { visible: boolean; onDismiss: ()
             whiteSpace: "nowrap",
           }}
         >
-          Learn more →
+          {content.bannerCta}
         </button>
         <button
           onClick={onDismiss}
@@ -328,11 +410,11 @@ function PauseAdBanner({ visible, onDismiss }: { visible: boolean; onDismiss: ()
   );
 }
 
-/** ShopPause overlay — product card (original) */
+/** ShopPause overlay — product card */
 function ShopPauseOverlay({
-  visible, focused, countdown, onFocus, onShopNow, onSave, onDismiss,
+  visible, focused, countdown, content, onFocus, onShopNow, onSave, onDismiss,
 }: {
-  visible: boolean; focused: boolean; countdown: number;
+  visible: boolean; focused: boolean; countdown: number; content: ProductContent;
   onFocus: () => void; onShopNow: () => void; onSave: () => void; onDismiss: () => void;
 }) {
   const pct = (countdown / COUNTDOWN_START) * 100;
@@ -352,17 +434,12 @@ function ShopPauseOverlay({
         As seen in this show
       </div>
       <div style={{ height: "clamp(50px,10vw,80px)", background: "linear-gradient(135deg, #f0effe 0%, #e8e4fd 100%)", display: "flex", alignItems: "center", justifyContent: "center", position: "relative" }}>
-        <svg width="70" height="42" viewBox="0 0 80 48" fill="none" aria-label="Nike Air Force 1">
-          <ellipse cx="40" cy="40" rx="36" ry="5" fill="rgba(0,0,0,0.08)" />
-          <path d="M8 34 Q12 20 24 18 Q32 16 40 20 L68 22 Q72 22 72 26 Q72 30 68 31 L16 34 Q10 34 8 34Z" fill="#f0f0f0" stroke="#ddd" strokeWidth="0.5" />
-          <path d="M14 28 Q20 18 32 16 Q40 15 48 18 L60 20 L56 24 Q44 24 34 22 Q24 22 18 28Z" fill="#e8e8e8" />
-          <path d="M22 24 Q34 18 48 22 L44 26 Q32 24 22 24Z" fill="#111" />
-        </svg>
-        <span style={{ position: "absolute", top: "4px", right: "6px", fontSize: "clamp(7px,1.2vw,9px)", fontWeight: 800, color: "#111" }}>NIKE</span>
+        <span style={{ fontSize: "clamp(24px,5vw,40px)" }}>{content.emoji}</span>
+        <span style={{ position: "absolute", top: "4px", right: "6px", fontSize: "clamp(7px,1.2vw,9px)", fontWeight: 800, color: "#555" }}>{content.brand.toUpperCase()}</span>
       </div>
       <div style={{ padding: "clamp(6px,1.5vw,10px) clamp(6px,1.5vw,10px) 0" }}>
-        <p style={{ fontSize: "clamp(9px,1.6vw,11px)", fontWeight: 700, color: "#111", marginBottom: "2px", lineHeight: 1.2 }}>Air Force 1 &apos;07</p>
-        <p style={{ fontSize: "clamp(10px,1.8vw,13px)", fontWeight: 800, color: "#7c6af5", marginBottom: "clamp(4px,1vw,8px)" }}>$110</p>
+        <p style={{ fontSize: "clamp(9px,1.6vw,11px)", fontWeight: 700, color: "#111", marginBottom: "2px", lineHeight: 1.2 }}>{content.product}</p>
+        <p style={{ fontSize: "clamp(10px,1.8vw,13px)", fontWeight: 800, color: "#7c6af5", marginBottom: "clamp(4px,1vw,8px)" }}>{content.price}</p>
         <div onClick={onFocus} style={{ display: "flex", flexDirection: "column", gap: "3px" }}>
           <button onClick={(e) => { e.stopPropagation(); onShopNow(); }} style={{ width: "100%", padding: "clamp(4px,1vw,6px)", borderRadius: "6px", fontSize: "clamp(8px,1.4vw,10px)", fontWeight: 700, fontFamily: "inherit", cursor: "pointer", border: focused ? "2px solid #7c6af5" : "2px solid transparent", background: "#7c6af5", color: "#fff" }}>🛍 Shop Now</button>
           <div style={{ display: "flex", gap: "3px" }}>
@@ -384,7 +461,7 @@ function ShopPauseOverlay({
   );
 }
 
-function ConversionOverlay({ onDone }: { onDone: () => void }) {
+function ConversionOverlay({ content, onDone }: { content: ProductContent; onDone: () => void }) {
   return (
     <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.75)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 20, backdropFilter: "blur(4px)" }}>
       <div style={{ background: "#fff", borderRadius: "16px", padding: "clamp(16px,3vw,28px) clamp(20px,4vw,32px)", textAlign: "center", maxWidth: "260px", boxShadow: "0 24px 64px rgba(0,0,0,0.4)" }}>
@@ -401,7 +478,7 @@ function ConversionOverlay({ onDone }: { onDone: () => void }) {
           </svg>
         </div>
         <p style={{ fontSize: "12px", fontWeight: 700, color: "#111", marginBottom: "4px" }}>Scan to shop on your phone</p>
-        <p style={{ fontSize: "10px", color: "#888", marginBottom: "14px", lineHeight: 1.4 }}>Nike Air Force 1 &apos;07 · $110</p>
+        <p style={{ fontSize: "10px", color: "#888", marginBottom: "14px", lineHeight: 1.4 }}>{content.brand} · {content.product} · {content.price}</p>
         <button onClick={onDone} style={{ width: "100%", padding: "8px", borderRadius: "8px", background: "#7c6af5", color: "#fff", fontSize: "11px", fontWeight: 700, fontFamily: "inherit", cursor: "pointer", border: "none" }}>
           Done — Resume Playback
         </button>
@@ -412,19 +489,20 @@ function ConversionOverlay({ onDone }: { onDone: () => void }) {
 
 // ── Main component ────────────────────────────────────────────────────────────
 
-export default function TVPrototype({ format = "shoppable" }: { format?: FormatKey }) {
+export default function TVPrototype({ format = "shoppable", category = "retail" }: { format?: FormatKey; category?: CategoryKey }) {
   const [state, setState] = useState<DemoState>("playing");
   const [countdown, setCountdown] = useState(COUNTDOWN_START);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const meta = FORMAT_META[format];
+  const content = CATEGORY_CONTENT[category];
 
-  // Reset state when format changes
+  // Reset state when format or category changes
   useEffect(() => {
     setState("playing");
     setCountdown(COUNTDOWN_START);
     if (timerRef.current) clearInterval(timerRef.current);
-  }, [format]);
+  }, [format, category]);
 
   // Countdown for pause-triggered overlays
   useEffect(() => {
@@ -545,6 +623,7 @@ export default function TVPrototype({ format = "shoppable" }: { format?: FormatK
           {(format === "standard_15" || format === "standard_30") && overlayVisible && (
             <StandardAdOverlay
               seconds={format === "standard_15" ? 15 : 30}
+              content={content}
               onDone={() => setState("playing")}
             />
           )}
@@ -552,6 +631,7 @@ export default function TVPrototype({ format = "shoppable" }: { format?: FormatK
           {format === "interactive_choice" && (
             <ChoiceAdOverlay
               visible={overlayVisible}
+              content={content}
               onDone={() => { setState("dismissed"); setTimeout(() => setState("playing"), 600); }}
             />
           )}
@@ -559,6 +639,7 @@ export default function TVPrototype({ format = "shoppable" }: { format?: FormatK
           {format === "qr_code" && (
             <QRCodeOverlay
               visible={overlayVisible}
+              content={content}
               onDismiss={() => { setState("dismissed"); setTimeout(() => setState("playing"), 400); }}
             />
           )}
@@ -566,6 +647,7 @@ export default function TVPrototype({ format = "shoppable" }: { format?: FormatK
           {format === "pause_ad" && (
             <PauseAdBanner
               visible={overlayVisible}
+              content={content}
               onDismiss={() => { setState("dismissed"); setTimeout(() => setState("playing"), 400); }}
             />
           )}
@@ -575,6 +657,7 @@ export default function TVPrototype({ format = "shoppable" }: { format?: FormatK
               visible={overlayVisible}
               focused={state === "focused"}
               countdown={countdown}
+              content={content}
               onFocus={() => setState("focused")}
               onShopNow={() => setState("converted")}
               onSave={() => { setState("dismissed"); setTimeout(() => setState("playing"), 800); }}
@@ -582,7 +665,7 @@ export default function TVPrototype({ format = "shoppable" }: { format?: FormatK
             />
           )}
 
-          {state === "converted" && <ConversionOverlay onDone={() => { setState("playing"); setCountdown(COUNTDOWN_START); }} />}
+          {state === "converted" && <ConversionOverlay content={content} onDone={() => { setState("playing"); setCountdown(COUNTDOWN_START); }} />}
         </div>
 
         {/* Progress bar */}
